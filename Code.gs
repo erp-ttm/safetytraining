@@ -2,8 +2,8 @@
 // TTM Training System - Code.gs (Google Apps Script Backend)
 // ============================================================
 
-const SPREADSHEET_ID = ''; // ← ใส่ Spreadsheet ID ของคุณ
-const SLIDE_TEMPLATE_ID = ''; // ← ใส่ Google Slides Template ID
+const SPREADSHEET_ID = '1flL8UacixiOags5vufPuWK--z6waWtTXdM3WBeJ7r6c'; // ← ใส่ Spreadsheet ID ของคุณ
+const SLIDE_TEMPLATE_ID = '1gO7YG67uSU1Koud5xhsVGNht8_hcIET0HAH_cURfUcA'; // ← ใส่ Google Slides Template ID
 
 // Sheet names
 const SHEET_USERS     = 'Users';
