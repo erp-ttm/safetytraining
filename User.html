@@ -3,1090 +3,1140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTM - การอบรมความปลอดภัย</title>
+<title>Training - TTM Safety System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-/* ============================================================
-   ✅ CONFIG — ผู้เขียนโค้ดแก้ไขได้ที่นี่
-   VIDEO_UNLOCK_SECONDS = จำนวนวินาทีที่ต้องดูวิดีโอก่อนปุ่มจะแสดง
-   ตั้งค่าต่อวิดีโอ (หากมีหลายคลิปจะรวมทุกคลิป)
-   ============================================================ */
-/*  ← ดูใน <script> ด้านล่าง หัวข้อ CONFIG  */
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #e63946;
+    --accent: #f4a261;
+    --gold: #ffd700;
+    --success: #2a9d8f;
+    --bg: #0f1923;
+    --card-bg: #1a2840;
+    --card-border: rgba(255,255,255,0.08);
+    --text: #e8f4f8;
+    --text-muted: rgba(168,218,220,0.6);
+    --input-bg: rgba(255,255,255,0.06);
+    --light-blue: #a8dadc;
+  }
 
-:root {
-  --ttm-red:#C0392B; --ttm-dark:#1A1A2E;
-  --ttm-gold:#D4AC0D; --ttm-light:#F5F6FA;
-  --ttm-card:#ffffff; --ttm-border:#E2E8F0;
-  --ttm-text:#1E293B; --ttm-muted:#64748B;
-  --ttm-accent:#EFF6FF;
-}
-* { font-family:'Sarabun',sans-serif; box-sizing:border-box; }
-body { background:var(--ttm-light); color:var(--ttm-text); margin:0; min-height:100vh; }
+  * { box-sizing: border-box; }
 
-/* ---- Topbar ---- */
-.topbar {
-  background:linear-gradient(135deg,#1A1A2E 0%,#C0392B 100%);
-  padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
-  position:sticky; top:0; z-index:100; box-shadow:0 2px 16px rgba(0,0,0,.3);
-}
-.topbar-logo { display:flex; align-items:center; gap:12px; }
-.topbar-logo img { height:36px; }
-.topbar-logo-text { color:#fff; font-size:13px; font-weight:700; line-height:1.35; }
-.topbar-right { display:flex; align-items:center; gap:10px; }
-.lang-pill { display:flex; background:rgba(255,255,255,.15); border-radius:8px; overflow:hidden; }
-.lang-pill-btn {
-  background:none; border:none; color:rgba(255,255,255,.7);
-  font-size:12px; font-weight:600; padding:6px 12px; cursor:pointer;
-  transition:all .2s; font-family:'Sarabun',sans-serif;
-}
-.lang-pill-btn.active { background:rgba(255,255,255,.25); color:#fff; }
-.btn-logout-top {
-  background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
-  border-radius:8px; color:#fff; font-size:12px; padding:6px 14px;
-  cursor:pointer; font-family:'Sarabun',sans-serif; transition:all .2s;
-}
-.btn-logout-top:hover { background:rgba(255,255,255,.25); }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
 
-/* ---- Steps ---- */
-.steps-bar {
-  background:var(--ttm-card); border-bottom:1px solid var(--ttm-border);
-  padding:14px 24px; overflow-x:auto;
-}
-.steps-inner {
-  display:flex; align-items:center; min-width:fit-content;
-  margin:0 auto; max-width:700px;
-}
-.step-wrapper { display:flex; flex-direction:column; align-items:center; }
-.step-icon {
-  width:38px; height:38px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; font-weight:700; flex-shrink:0; transition:all .4s;
-  background:var(--ttm-border); color:var(--ttm-muted); border:2px solid var(--ttm-border);
-}
-.step-icon.done   { background:#28a745; border-color:#28a745; color:#fff; }
-.step-icon.active { background:var(--ttm-red); border-color:var(--ttm-red); color:#fff;
-                    box-shadow:0 0 0 4px rgba(192,57,43,.2); }
-.step-label       { font-size:11px; font-weight:600; color:var(--ttm-muted); margin-top:4px; white-space:nowrap; }
-.step-label.active{ color:var(--ttm-red); }
-.step-label.done  { color:#28a745; }
-.step-connector   { flex:1; height:2px; background:var(--ttm-border); transition:background .4s; }
-.step-connector.done { background:#28a745; }
+  /* ===================== HEADER ===================== */
+  .app-header {
+    background: rgba(13,27,42,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
 
-/* ---- Content ---- */
-.content-wrap { max-width:900px; margin:0 auto; padding:28px 16px; }
-.card-section {
-  background:var(--ttm-card); border:1px solid var(--ttm-border); border-radius:16px;
-  overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.06);
-  animation:fadeSlide .5s ease both;
-}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo { height: 36px; filter: brightness(0) invert(1); }
 
-.card-header-ttm {
-  background:linear-gradient(135deg,#1A1A2E,#2D3561);
-  padding:20px 28px; display:flex; align-items:center; gap:14px;
-}
-.card-header-icon { font-size:22px; color:var(--ttm-gold); }
-.card-header-title{ color:#fff; font-size:18px; font-weight:700; }
-.card-header-sub  { color:rgba(255,255,255,.55); font-size:13px; }
-.card-body-ttm    { padding:28px; }
+  .header-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+  .header-sub { font-size: 0.72rem; color: var(--text-muted); }
 
-/* ---- Form ---- */
-.form-row-ttm { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-@media(max-width:600px){ .form-row-ttm{ grid-template-columns:1fr; } }
-.form-group-ttm label {
-  font-size:13px; font-weight:600; color:var(--ttm-muted); margin-bottom:6px; display:block;
-}
-.form-group-ttm label .req { color:var(--ttm-red); }
-.form-control-ttm, .form-select-ttm {
-  width:100%; border:1.5px solid var(--ttm-border); border-radius:10px;
-  padding:11px 14px; font-size:14px; color:var(--ttm-text);
-  transition:all .2s; font-family:'Sarabun',sans-serif; background:var(--ttm-light);
-}
-.form-control-ttm:focus, .form-select-ttm:focus {
-  outline:none; border-color:var(--ttm-red); background:#fff;
-  box-shadow:0 0 0 3px rgba(192,57,43,.1);
-}
-.form-control-ttm::placeholder { color:#CBD5E1; }
+  .lang-toggle {
+    display: flex; gap: 2px;
+    background: rgba(255,255,255,0.06); border-radius: 20px; padding: 3px;
+    border: 1px solid var(--card-border);
+  }
 
-/* ---- Buttons ---- */
-.btn-ttm-primary {
-  background:linear-gradient(135deg,var(--ttm-red),#922B21);
-  border:none; border-radius:12px; color:#fff; font-size:15px; font-weight:700;
-  padding:13px 32px; cursor:pointer; transition:all .3s;
-  font-family:'Sarabun',sans-serif;
-  display:inline-flex; align-items:center; gap:8px;
-}
-.btn-ttm-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(192,57,43,.4); }
-.btn-ttm-primary:disabled{ opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
-.btn-ttm-success {
-  background:linear-gradient(135deg,#28a745,#1e7e34);
-  border:none; border-radius:12px; color:#fff; font-size:15px; font-weight:700;
-  padding:13px 32px; cursor:pointer; transition:all .3s;
-  font-family:'Sarabun',sans-serif;
-  display:inline-flex; align-items:center; gap:8px;
-}
-.btn-ttm-success:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(40,167,69,.4); }
+  .lang-btn {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 16px; transition: all 0.2s;
+  }
+  .lang-btn.active { background: var(--accent); color: white; }
 
-/* ---- Video ---- */
-.video-container {
-  position:relative; width:100%; padding-top:56.25%;
-  background:#000; border-radius:12px; overflow:hidden;
-}
-.video-container iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+  /* ===================== STEPPER ===================== */
+  .stepper-bar {
+    background: rgba(13,27,42,0.8);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 0;
+  }
 
-/* Timer progress */
-.timer-bar-wrap {
-  background:#E2E8F0; border-radius:99px; height:8px; margin:14px 0 4px; overflow:hidden;
-}
-.timer-bar-fill {
-  height:100%; border-radius:99px; transition:width 1s linear;
-  background:linear-gradient(90deg,var(--ttm-gold),#F97316);
-}
-.timer-info {
-  display:flex; align-items:center; justify-content:space-between;
-  font-size:13px; color:var(--ttm-muted);
-}
-.unlock-badge {
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(40,167,69,.12); border:1px solid rgba(40,167,69,.3);
-  border-radius:8px; padding:8px 14px; font-size:13px; font-weight:700; color:#16A34A;
-}
+  .step {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+    transition: all 0.3s;
+  }
 
-/* ---- Quiz ---- */
-.q-card {
-  border:1.5px solid var(--ttm-border); border-radius:12px; padding:20px;
-  margin-bottom:16px; background:#fff;
-}
-.q-number { font-size:12px; font-weight:700; color:var(--ttm-muted);
-            text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
-.q-text   { font-size:15px; font-weight:600; line-height:1.6; margin-bottom:14px; }
-.q-option {
-  display:flex; align-items:flex-start; gap:12px; padding:10px 14px;
-  border:1.5px solid var(--ttm-border); border-radius:10px; cursor:pointer;
-  transition:all .2s; margin-bottom:8px; background:var(--ttm-light);
-}
-.q-option:hover   { border-color:var(--ttm-red); background:rgba(192,57,43,.04); }
-.q-option.selected{ border-color:var(--ttm-red); background:rgba(192,57,43,.08); }
-.q-option.correct { border-color:#28a745; background:rgba(40,167,69,.08); }
-.q-option.wrong   { border-color:var(--ttm-red); background:rgba(192,57,43,.08); }
-.opt-badge {
-  width:28px; height:28px; border-radius:8px; background:var(--ttm-border);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:13px; flex-shrink:0; transition:all .2s;
-}
-.q-option.selected .opt-badge { background:var(--ttm-red); color:#fff; }
-.q-option.correct  .opt-badge { background:#28a745; color:#fff; }
-.q-option.wrong    .opt-badge { background:var(--ttm-red); color:#fff; }
-.opt-text { font-size:14px; padding-top:4px; line-height:1.5; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+    transition: all 0.3s;
+  }
 
-/* ---- Result ---- */
-.result-circle {
-  width:140px; height:140px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
-  margin:0 auto 20px;
-}
-.result-circle.pass{ background:radial-gradient(circle,rgba(40,167,69,.2),rgba(40,167,69,.05)); border:4px solid #28a745; }
-.result-circle.fail{ background:radial-gradient(circle,rgba(192,57,43,.2),rgba(192,57,43,.05)); border:4px solid var(--ttm-red); }
-.result-score{ font-size:40px; font-weight:800; line-height:1; }
-.result-total{ font-size:14px; color:var(--ttm-muted); }
-.score-breakdown { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 0; }
-.score-stat { background:var(--ttm-light); border-radius:10px; padding:14px; text-align:center; }
-.score-stat-num{ font-size:24px; font-weight:800; }
-.score-stat-lbl{ font-size:12px; color:var(--ttm-muted); }
+  .step.active .step-num { background: var(--secondary); border-color: var(--secondary); color: white; }
+  .step.active { color: var(--text); }
+  .step.done .step-num { background: var(--success); border-color: var(--success); color: white; }
+  .step.done { color: var(--success); }
 
-/* ---- Banners ---- */
-.info-banner {
-  background:var(--ttm-accent); border:1px solid #BFDBFE; border-radius:10px;
-  padding:12px 16px; font-size:13px; color:#1D4ED8; margin-bottom:18px;
-}
-.retake-banner {
-  background:rgba(212,172,13,.1); border:1px solid rgba(212,172,13,.3);
-  border-radius:10px; padding:12px 16px; font-size:13px; color:#92640D; margin-bottom:18px;
-}
+  .step-line { width: 40px; height: 2px; background: rgba(255,255,255,0.1); margin: 0 4px; flex-shrink: 0; }
 
-/* ---- PDF section ---- */
-.pdf-box {
-  background:#F0FDF4; border:1px solid #86EFAC; border-radius:12px;
-  padding:22px; margin-top:20px; text-align:center;
-}
+  /* ===================== MAIN ===================== */
+  .main-wrap {
+    max-width: 900px; margin: 0 auto; padding: 24px 16px;
+  }
 
-/* ---- Toast ---- */
-.toast-container-ttm {
-  position:fixed; bottom:24px; right:24px; z-index:9999;
-  display:flex; flex-direction:column; gap:8px;
-}
-.toast-ttm {
-  background:#1E293B; color:#fff; border-radius:12px;
-  padding:14px 18px; font-size:14px; min-width:260px;
-  display:flex; align-items:center; gap:10px;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);
-  animation:slideInToast .3s ease;
-}
-@keyframes slideInToast{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  /* ===================== CARDS ===================== */
+  .card-custom {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: fadeInUp 0.4s ease-out;
+  }
 
-/* ---- Sections ---- */
-.section { display:none; }
-.section.active { display:block; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-/* Address block */
-.addr-block {
-  background:var(--ttm-light); border-radius:10px; padding:16px; margin-bottom:16px;
-}
-.addr-block-title {
-  font-size:13px; font-weight:700; color:var(--ttm-muted); margin-bottom:12px;
-}
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===================== FORM ===================== */
+  .form-label-custom { color: var(--text-muted); font-size: 0.83rem; font-weight: 600; margin-bottom: 6px; display: block; }
+
+  .form-control-custom {
+    width: 100%; background: var(--input-bg); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 11px 14px; color: var(--text);
+    font-family: 'Sarabun', sans-serif; font-size: 0.92rem; outline: none; transition: all 0.2s;
+  }
+
+  .form-control-custom:focus { border-color: var(--accent); background: rgba(255,255,255,0.09); }
+  .form-control-custom::placeholder { color: var(--text-muted); }
+
+  select.form-control-custom option { background: #1a2840; color: var(--text); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .form-group { margin-bottom: 16px; }
+
+  /* ===================== BUTTONS ===================== */
+  .btn-main {
+    background: linear-gradient(135deg, var(--secondary), #c1121f);
+    border: none; border-radius: 12px; padding: 12px 28px;
+    color: white; font-family: 'Sarabun', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 4px 16px rgba(230,57,70,0.35);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,57,70,0.45); }
+  .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--success), #1d7a72);
+    border: none; border-radius: 12px; padding: 12px 28px;
+    color: white; font-family: 'Sarabun', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 4px 16px rgba(42,157,143,0.3);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-success:hover { transform: translateY(-2px); }
+  .btn-success:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===================== VIDEO ===================== */
+  .video-container {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: #000; border: 1px solid var(--card-border);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .video-container::before {
+    content: ''; display: block; padding-top: 56.25%;
+  }
+
+  .video-container iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+  }
+
+  .video-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-radius: 14px; gap: 12px;
+    pointer-events: none;
+  }
+
+  .video-status-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(42,157,143,0.9); color: white;
+    border-radius: 20px; padding: 6px 16px; font-size: 0.85rem; font-weight: 600;
+  }
+
+  .video-progress-bar-wrap {
+    background: rgba(255,255,255,0.1); border-radius: 4px; height: 6px; margin-top: 12px;
+    overflow: hidden;
+  }
+
+  .video-progress-bar { height: 100%; background: var(--success); border-radius: 4px; transition: width 0.5s; }
+
+  /* ===================== QUIZ ===================== */
+  .quiz-header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
+  }
+
+  .quiz-progress-text { font-size: 0.85rem; color: var(--text-muted); }
+
+  .quiz-progress-bar-wrap {
+    background: rgba(255,255,255,0.08); border-radius: 6px; height: 8px; margin-bottom: 20px;
+  }
+
+  .quiz-progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--accent)); border-radius: 6px; transition: width 0.4s; }
+
+  .question-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 20px; margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .question-card.incorrect-only { border-color: rgba(230,57,70,0.3); }
+
+  .question-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(230,57,70,0.2); color: #ff8fa3;
+    font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;
+  }
+
+  .question-text { font-size: 1rem; font-weight: 600; line-height: 1.5; margin-bottom: 16px; }
+
+  .options-grid { display: flex; flex-direction: column; gap: 8px; }
+
+  .option-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 12px 16px; cursor: pointer;
+    transition: all 0.2s; text-align: left; width: 100%;
+    font-family: 'Sarabun', sans-serif; color: var(--text); font-size: 0.9rem;
+  }
+
+  .option-btn:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
+
+  .option-btn.selected { background: rgba(26,58,92,0.4); border-color: var(--light-blue); color: white; }
+  .option-btn.correct { background: rgba(42,157,143,0.2); border-color: var(--success); color: #80ffe8; }
+  .option-btn.wrong { background: rgba(230,57,70,0.15); border-color: var(--secondary); color: #ff8fa3; }
+
+  .option-label {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    background: rgba(255,255,255,0.08); font-weight: 700; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .option-btn.selected .option-label { background: var(--primary); }
+  .option-btn.correct .option-label { background: var(--success); }
+  .option-btn.wrong .option-label { background: var(--secondary); }
+
+  /* ===================== RESULT ===================== */
+  .result-circle {
+    width: 120px; height: 120px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 0 auto 20px; border: 4px solid;
+    font-weight: 800; position: relative;
+    box-shadow: 0 0 40px rgba(0,0,0,0.3);
+  }
+
+  .result-circle.pass { border-color: var(--success); color: #80ffe8; background: rgba(42,157,143,0.15); }
+  .result-circle.fail { border-color: var(--secondary); color: #ff8fa3; background: rgba(230,57,70,0.1); }
+
+  .result-score { font-size: 2.2rem; line-height: 1; }
+  .result-total { font-size: 0.85rem; opacity: 0.8; }
+
+  /* Alert */
+  .alert-bar {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; padding: 12px 24px; border-radius: 12px;
+    font-size: 0.9rem; font-weight: 600; min-width: 280px; text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4); display: none;
+  }
+
+  .alert-bar.show { display: block; animation: slideDownAlert 0.3s ease; }
+  .alert-bar.success { background: #1b4332; border: 1px solid #2d6a4f; color: #95d5b2; }
+  .alert-bar.error { background: #3d0000; border: 1px solid #6d0000; color: #ff8fa3; }
+  .alert-bar.warning { background: #3d2a00; border: 1px solid #7a5200; color: #ffd166; }
+
+  @keyframes slideDownAlert {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* PDF Download */
+  .pdf-download-area {
+    background: rgba(42,157,143,0.1); border: 1px solid rgba(42,157,143,0.3);
+    border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px;
+  }
+
+  .btn-download {
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    border: none; border-radius: 12px; padding: 14px 32px;
+    color: white; font-family: 'Sarabun', sans-serif;
+    font-size: 1.05rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 4px 20px rgba(230,57,70,0.4);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230,57,70,0.5); }
+
+  /* Section heading */
+  .section-heading {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;
+  }
+
+  .section-heading i { color: var(--accent); }
+
+  .section-sub { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px; }
+
+  /* Required mark */
+  .req { color: var(--secondary); margin-left: 2px; }
+
+  /* Logout btn */
+  .btn-logout-top {
+    background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25);
+    color: #ff8fa3; border-radius: 20px; padding: 5px 14px;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    font-family: 'Sarabun', sans-serif; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .btn-logout-top:hover { background: rgba(230,57,70,0.25); }
+
+  /* Retry banner */
+  .retry-banner {
+    background: rgba(230,57,70,0.1); border: 1px solid rgba(230,57,70,0.3);
+    border-radius: 12px; padding: 14px 20px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px; font-size: 0.9rem;
+  }
+
+  .retry-banner i { color: #ff8fa3; font-size: 1.2rem; flex-shrink: 0; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  @media (max-width: 600px) {
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    .card-custom { padding: 18px; }
+    .step-line { width: 20px; }
+    .step span { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ======== TOPBAR ======== -->
-<div class="topbar">
-  <div class="topbar-logo">
-    <img src="https://ttm-jda.com/themes/default/images/all/logo/pic_logo.png" alt="TTM"
-         onerror="this.style.display='none'">
-    <div class="topbar-logo-text" id="topTitle">ระบบอบรมข้อกำหนดด้านความปลอดภัย TTM</div>
-  </div>
-  <div class="topbar-right">
-    <div class="lang-pill">
-      <button class="lang-pill-btn active" onclick="setLang('th')" id="btnTH">🇹🇭 TH</button>
-      <button class="lang-pill-btn" onclick="setLang('en')" id="btnEN">🇺🇸 EN</button>
+<div class="alert-bar" id="alertBar"></div>
+
+<!-- Header -->
+<div class="app-header">
+  <div class="header-left">
+    <img src="https://ttm-jda.com/themes/default/images/all/logo/pic_logo.png" class="header-logo" alt="TTM" onerror="this.style.display='none'">
+    <div>
+      <div class="header-title" data-th="ระบบอบรมความปลอดภัย TTM" data-en="TTM Safety Training System">ระบบอบรมความปลอดภัย TTM</div>
+      <div class="header-sub" id="headerUsername">-</div>
     </div>
-    <button class="btn-logout-top" onclick="doLogout()">
-      <i class="fas fa-sign-out-alt me-1"></i><span id="logoutTxt">ออกจากระบบ</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('th')" id="langTH">TH</button>
+      <button class="lang-btn" onclick="setLang('en')" id="langEN">EN</button>
+    </div>
+    <button class="btn-logout-top" onclick="logout()">
+      <i class="fa fa-right-from-bracket"></i>
+      <span data-th="ออก" data-en="Logout">ออก</span>
     </button>
   </div>
 </div>
 
-<!-- ======== STEPS ======== -->
-<div class="steps-bar">
-  <div class="steps-inner">
-    <div class="step-wrapper">
-      <div class="step-icon active" id="si-1"><i class="fas fa-user"></i></div>
-      <div class="step-label active" id="sl-1">ข้อมูล</div>
-    </div>
-    <div class="step-connector" id="sc-1"></div>
-    <div class="step-wrapper">
-      <div class="step-icon" id="si-2"><i class="fab fa-youtube"></i></div>
-      <div class="step-label" id="sl-2">วิดีโอ</div>
-    </div>
-    <div class="step-connector" id="sc-2"></div>
-    <div class="step-wrapper">
-      <div class="step-icon" id="si-3"><i class="fas fa-pencil-alt"></i></div>
-      <div class="step-label" id="sl-3">แบบทดสอบ</div>
-    </div>
-    <div class="step-connector" id="sc-3"></div>
-    <div class="step-wrapper">
-      <div class="step-icon" id="si-4"><i class="fas fa-trophy"></i></div>
-      <div class="step-label" id="sl-4">ผลลัพธ์</div>
-    </div>
+<!-- Stepper -->
+<div class="stepper-bar">
+  <div class="step active" id="step1">
+    <div class="step-num">1</div>
+    <span data-th="ข้อมูลส่วนตัว" data-en="Personal Info">ข้อมูลส่วนตัว</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step2">
+    <div class="step-num">2</div>
+    <span data-th="ดูวิดีโอ" data-en="Watch Video">ดูวิดีโอ</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step3">
+    <div class="step-num">3</div>
+    <span data-th="ทำแบบทดสอบ" data-en="Quiz">ทำแบบทดสอบ</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step4">
+    <div class="step-num">4</div>
+    <span data-th="ผลการสอบ" data-en="Result">ผลการสอบ</span>
   </div>
 </div>
 
-<!-- ======== CONTENT ======== -->
-<div class="content-wrap">
+<!-- ===================== CONTENT ===================== -->
+<div class="main-wrap">
 
-  <!-- ===== STEP 1 : ข้อมูลผู้เข้าอบรม ===== -->
-  <div class="section active" id="sec-info">
-    <div class="card-section">
-      <div class="card-header-ttm">
-        <div class="card-header-icon"><i class="fas fa-id-card"></i></div>
-        <div>
-          <div class="card-header-title" id="info-title">ข้อมูลผู้เข้าอบรม</div>
-          <div class="card-header-sub"   id="info-sub">กรุณากรอกข้อมูลให้ครบถ้วนก่อนเริ่มอบรม</div>
+  <!-- STEP 1: Personal Info -->
+  <div class="section active" id="section-info">
+    <div class="card-custom">
+      <div class="section-heading">
+        <i class="fa fa-user-circle"></i>
+        <span data-th="ข้อมูลผู้เข้าอบรม" data-en="Trainee Information">ข้อมูลผู้เข้าอบรม</span>
+      </div>
+      <p class="section-sub" data-th="กรุณากรอกข้อมูลให้ครบถ้วนก่อนเข้าสู่การอบรม" data-en="Please fill in all required information before starting the training.">กรุณากรอกข้อมูลให้ครบถ้วนก่อนเข้าสู่การอบรม</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="ชื่อ-นามสกุล" data-en="Full Name">ชื่อ-นามสกุล</span><span class="req">*</span></label>
+          <input type="text" id="infName" class="form-control-custom" placeholder="ชื่อ นามสกุล / Full Name">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="อายุ" data-en="Age">อายุ</span><span class="req">*</span></label>
+          <input type="number" id="infAge" class="form-control-custom" min="18" max="80" placeholder="อายุ">
         </div>
       </div>
-      <div class="card-body-ttm">
 
-        <div class="form-row-ttm">
-          <div class="form-group-ttm">
-            <label id="lbl-fname"><i class="fas fa-user me-1" style="color:var(--ttm-muted)"></i>
-              ชื่อ-นามสกุล <span class="req">*</span></label>
-            <input type="text" class="form-control-ttm" id="f-name" placeholder="กรอกชื่อ-นามสกุล">
-          </div>
-          <div class="form-group-ttm">
-            <label id="lbl-fage"><i class="fas fa-birthday-cake me-1" style="color:var(--ttm-muted)"></i>
-              อายุ <span class="req">*</span></label>
-            <input type="number" class="form-control-ttm" id="f-age" placeholder="อายุ (ปี)" min="15" max="80">
-          </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="กลุ่มเลือด" data-en="Blood Type">กลุ่มเลือด</span><span class="req">*</span></label>
+          <select id="infBlood" class="form-control-custom">
+            <option value="" data-th="-- เลือก --" data-en="-- Select --">-- เลือก --</option>
+            <option value="O">O</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="AB">AB</option>
+          </select>
         </div>
-
-        <div class="form-row-ttm">
-          <div class="form-group-ttm">
-            <label id="lbl-fblood"><i class="fas fa-tint me-1" style="color:var(--ttm-muted)"></i>
-              กรุ๊ปเลือด <span class="req">*</span></label>
-            <select class="form-select-ttm" id="f-blood">
-              <option value="">— เลือกกรุ๊ปเลือด —</option>
-              <option value="O">O</option><option value="A">A</option>
-              <option value="B">B</option><option value="AB">AB</option>
-            </select>
-          </div>
-          <div class="form-group-ttm">
-            <label id="lbl-ftel"><i class="fas fa-phone me-1" style="color:var(--ttm-muted)"></i>
-              เบอร์โทรศัพท์ <span class="req">*</span></label>
-            <input type="tel" class="form-control-ttm" id="f-tel" placeholder="0XX-XXXXXXX">
-          </div>
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="เบอร์โทรศัพท์" data-en="Phone Number">เบอร์โทรศัพท์</span><span class="req">*</span></label>
+          <input type="tel" id="infTel" class="form-control-custom" placeholder="0xx-xxx-xxxx">
         </div>
+      </div>
 
-        <!-- ที่อยู่ -->
-        <div class="addr-block">
-          <div class="addr-block-title" id="lbl-addr">
-            <i class="fas fa-map-marker-alt me-1"></i>ที่อยู่
-          </div>
-          <div class="form-row-ttm">
-            <div class="form-group-ttm">
-              <label id="lbl-fno">บ้านเลขที่</label>
-              <input type="text" class="form-control-ttm" id="f-no" placeholder="เช่น 123/4">
-            </div>
-            <div class="form-group-ttm">
-              <label id="lbl-fmoo">หมู่</label>
-              <input type="text" class="form-control-ttm" id="f-moo" placeholder="หมู่ที่">
-            </div>
-          </div>
-          <div class="form-row-ttm">
-            <div class="form-group-ttm">
-              <label id="lbl-froad">ถนน</label>
-              <input type="text" class="form-control-ttm" id="f-road" placeholder="ถนน">
-            </div>
-            <div class="form-group-ttm">
-              <label id="lbl-fsub">แขวง/ตำบล</label>
-              <input type="text" class="form-control-ttm" id="f-sub" placeholder="แขวง/ตำบล">
-            </div>
-          </div>
-          <div class="form-row-ttm">
-            <div class="form-group-ttm">
-              <label id="lbl-fdist">เขต/อำเภอ</label>
-              <input type="text" class="form-control-ttm" id="f-dist" placeholder="เขต/อำเภอ">
-            </div>
-            <div class="form-group-ttm">
-              <label id="lbl-fcity">จังหวัด <span class="req">*</span></label>
-              <input type="text" class="form-control-ttm" id="f-city" placeholder="จังหวัด">
-            </div>
-          </div>
-          <div class="form-row-ttm">
-            <div class="form-group-ttm">
-              <label id="lbl-fpost">รหัสไปรษณีย์</label>
-              <input type="text" class="form-control-ttm" id="f-post" placeholder="XXXXX" maxlength="5">
-            </div>
-            <div class="form-group-ttm"></div>
-          </div>
+      <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin: 12px 0 10px; text-transform:uppercase; letter-spacing:0.5px;">
+        <i class="fa fa-location-dot me-1" style="color:var(--accent)"></i>
+        <span data-th="ที่อยู่" data-en="Address">ที่อยู่</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom" data-th="บ้านเลขที่" data-en="House No.">บ้านเลขที่</label>
+          <input type="text" id="infNo" class="form-control-custom" placeholder="บ้านเลขที่">
         </div>
-
-        <div class="form-row-ttm">
-          <div class="form-group-ttm">
-            <label id="lbl-fcomp"><i class="fas fa-building me-1" style="color:var(--ttm-muted)"></i>
-              สังกัดบริษัท <span class="req">*</span></label>
-            <input type="text" class="form-control-ttm" id="f-company" placeholder="ชื่อบริษัท">
-          </div>
+        <div class="form-group">
+          <label class="form-label-custom" data-th="หมู่" data-en="Moo">หมู่</label>
+          <input type="text" id="infMoo" class="form-control-custom" placeholder="หมู่">
         </div>
+      </div>
 
-        <div class="text-end mt-3">
-          <button class="btn-ttm-primary" onclick="goToVideo()">
-            <span id="btn-next-info">ถัดไป: ดูวิดีโออบรม</span>
-            <i class="fas fa-arrow-right"></i>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom" data-th="ถนน" data-en="Road">ถนน</label>
+          <input type="text" id="infRoad" class="form-control-custom" placeholder="ถนน / Road">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" data-th="แขวง/ตำบล" data-en="Sub-district">แขวง/ตำบล</label>
+          <input type="text" id="infSubdistrict" class="form-control-custom" placeholder="แขวง/ตำบล">
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label class="form-label-custom" data-th="เขต/อำเภอ" data-en="District">เขต/อำเภอ</label>
+          <input type="text" id="infDistrict" class="form-control-custom" placeholder="เขต/อำเภอ">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" data-th="จังหวัด" data-en="Province">จังหวัด</label>
+          <input type="text" id="infCity" class="form-control-custom" placeholder="จังหวัด / Province">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom" data-th="รหัสไปรษณีย์" data-en="Postal Code">รหัสไปรษณีย์</label>
+          <input type="text" id="infPost" class="form-control-custom" placeholder="10xxx">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="สังกัดบริษัท" data-en="Company">สังกัดบริษัท</span><span class="req">*</span></label>
+          <input type="text" id="infCompany" class="form-control-custom" placeholder="ชื่อบริษัท / Company Name">
+        </div>
+        <div class="form-group">
+          <label class="form-label-custom"><span data-th="อีเมล" data-en="Email">อีเมล</span><span class="req">*</span></label>
+          <input type="email" id="infEmail" class="form-control-custom" placeholder="email@example.com">
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+        <button class="btn-main" onclick="submitInfo()">
+          <span data-th="ถัดไป: ดูวิดีโอ" data-en="Next: Watch Video">ถัดไป: ดูวิดีโอ</span>
+          <i class="fa fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Video -->
+  <div class="section" id="section-video">
+    <div class="card-custom">
+      <div class="section-heading">
+        <i class="fa fa-circle-play"></i>
+        <span data-th="วิดีโอการอบรม" data-en="Training Video">วิดีโอการอบรม</span>
+      </div>
+      <p class="section-sub" id="videoInstructionText" data-th="กรุณาดูวิดีโอการอบรมจนจบก่อนทำแบบทดสอบ ห้ามกรอไปข้างหน้า" data-en="Please watch the training video completely before taking the quiz.">กรุณาดูวิดีโอการอบรมจนจบก่อนทำแบบทดสอบ ห้ามกรอไปข้างหน้า</p>
+
+      <div id="videoArea">
+        <div style="text-align:center; color:var(--text-muted); padding:40px;">
+          <i class="fa fa-spinner fa-spin fa-2x mb-3" style="display:block;"></i>
+          <span data-th="กำลังโหลดวิดีโอ..." data-en="Loading video...">กำลังโหลดวิดีโอ...</span>
+        </div>
+      </div>
+
+      <!-- Video Progress -->
+      <div style="margin-top:16px; display:flex; align-items:center; gap:12px;">
+        <i class="fa fa-clock" style="color:var(--accent); font-size:0.9rem;"></i>
+        <div style="flex:1;">
+          <div class="video-progress-bar-wrap"><div class="video-progress-bar" id="videoProgressBar" style="width:0%"></div></div>
+        </div>
+        <div id="videoProgressText" style="font-size:0.78rem; color:var(--text-muted); min-width:80px; text-align:right;">0%</div>
+      </div>
+
+      <div id="videoStatus" style="margin-top:12px; text-align:center; color:var(--secondary); font-size:0.875rem; font-weight:600;">
+        <i class="fa fa-info-circle me-1"></i>
+        <span data-th="ดูวิดีโอจนจบเพื่อเปิดแบบทดสอบ" data-en="Watch the video to unlock the quiz">ดูวิดีโอจนจบเพื่อเปิดแบบทดสอบ</span>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button class="btn-main" id="goQuizBtn" disabled onclick="goToQuiz()">
+          <span data-th="เริ่มทำแบบทดสอบ" data-en="Start Quiz">เริ่มทำแบบทดสอบ</span>
+          <i class="fa fa-pencil"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Quiz -->
+  <div class="section" id="section-quiz">
+    <div class="card-custom">
+
+      <div id="retryBanner" class="retry-banner" style="display:none;">
+        <i class="fa fa-rotate-right"></i>
+        <div>
+          <div style="font-weight:700;" id="retryTitle" data-th="ทำข้อสอบซ้ำ (เฉพาะข้อที่ผิด)" data-en="Retry (Wrong answers only)">ทำข้อสอบซ้ำ (เฉพาะข้อที่ผิด)</div>
+          <div id="retrySubtitle" style="font-size:0.8rem; color:var(--text-muted);"></div>
+        </div>
+      </div>
+
+      <div class="quiz-header">
+        <div>
+          <div class="section-heading" style="margin-bottom:0;">
+            <i class="fa fa-pen-to-square"></i>
+            <span data-th="แบบทดสอบ" data-en="Quiz">แบบทดสอบ</span>
+          </div>
+          <div class="quiz-progress-text" id="quizProgressText">0/0</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.78rem; color:var(--text-muted);" data-th="ตอบแล้ว" data-en="Answered">ตอบแล้ว</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--accent);" id="answeredCount">0</div>
+        </div>
+      </div>
+
+      <div class="quiz-progress-bar-wrap"><div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div></div>
+
+      <div id="quizContainer"></div>
+
+      <div style="display:flex; justify-content:center; margin-top:24px;">
+        <button class="btn-success" id="submitQuizBtn" onclick="submitQuiz()" disabled>
+          <i class="fa fa-paper-plane"></i>
+          <span data-th="ส่งคำตอบ" data-en="Submit Answers">ส่งคำตอบ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Result -->
+  <div class="section" id="section-result">
+    <div class="card-custom" style="text-align:center;">
+      <div id="resultCircle" class="result-circle pass" style="margin-bottom:20px;">
+        <div class="result-score" id="resultScore">0</div>
+        <div class="result-total">/30</div>
+      </div>
+
+      <div id="resultTitle" style="font-size:1.4rem; font-weight:800; margin-bottom:8px;"></div>
+      <div id="resultSub" style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px;"></div>
+
+      <!-- Pass: Download area -->
+      <div id="passArea" style="display:none;">
+        <div class="pdf-download-area">
+          <div style="color:var(--success); font-size:1rem; font-weight:700; margin-bottom:8px;">
+            <i class="fa fa-file-pdf me-2"></i>
+            <span data-th="กระดาษคำตอบของคุณพร้อมแล้ว" data-en="Your Answer Sheet is Ready">กระดาษคำตอบของคุณพร้อมแล้ว</span>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;" data-th="กดปุ่มด้านล่างเพื่อดาวน์โหลดกระดาษคำตอบ PDF" data-en="Click the button below to download your Answer Sheet PDF">กดปุ่มด้านล่างเพื่อดาวน์โหลดกระดาษคำตอบ PDF</p>
+          <button class="btn-download" id="downloadBtn" onclick="downloadPDF()">
+            <i class="fa fa-file-pdf"></i>
+            <span data-th="ดาวน์โหลดกระดาษคำตอบ" data-en="Download Answer Sheet">ดาวน์โหลดกระดาษคำตอบ</span>
           </button>
         </div>
       </div>
-    </div>
-  </div><!-- /sec-info -->
 
-  <!-- ===== STEP 2 : วิดีโอ ===== -->
-  <div class="section" id="sec-video">
-    <div class="card-section">
-      <div class="card-header-ttm">
-        <div class="card-header-icon"><i class="fab fa-youtube"></i></div>
-        <div>
-          <div class="card-header-title" id="vid-title">วิดีโอการอบรม</div>
-          <div class="card-header-sub"   id="vid-sub">กรุณาดูวิดีโอให้ครบเวลาก่อนทำแบบทดสอบ</div>
-        </div>
-      </div>
-      <div class="card-body-ttm">
-
-        <div class="info-banner" id="vid-info-banner">
-          <i class="fas fa-info-circle me-2"></i>
-          <span id="vid-info-txt">ระบบนับเวลาการดูวิดีโอ — ปุ่มทำแบบทดสอบจะปรากฏเมื่อดูครบตามเวลาที่กำหนด</span>
-        </div>
-
-        <!-- Video tabs (กรณีหลายคลิป) -->
-        <div id="videoTabsBar" style="display:none;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;"></div>
-
-        <!-- Video iframe -->
-        <div class="video-container" id="videoWrap">
-          <iframe id="ytFrame" src="" allowfullscreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-          </iframe>
-        </div>
-
-        <!-- Timer progress bar -->
-        <div style="margin-top:18px;">
-          <div class="timer-info">
-            <span id="timerLabel">⏱ เวลาที่ดูแล้ว</span>
-            <span id="timerCountdown"></span>
-          </div>
-          <div class="timer-bar-wrap">
-            <div class="timer-bar-fill" id="timerBarFill" style="width:0%"></div>
-          </div>
-          <div style="font-size:12px;color:var(--ttm-muted);margin-top:4px;" id="timerNote">
-            <!-- แสดงสถานะ -->
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:20px;">
-          <div id="unlockBadge" class="unlock-badge" style="display:none;margin-right:auto;">
-            <i class="fas fa-unlock-alt"></i><span id="unlockBadgeTxt">ปลดล็อกแล้ว!</span>
-          </div>
-          <button class="btn-ttm-primary" id="btn-to-quiz" onclick="goToQuiz()" disabled>
-            <i class="fas fa-lock me-1" id="quizBtnIcon"></i>
-            <span id="btn-to-quiz-txt">ดูวิดีโอให้ครบก่อน</span>
-          </button>
-        </div>
+      <!-- Fail: Retry -->
+      <div id="failArea" style="display:none;">
+        <button class="btn-main" onclick="retryWrongAnswers()">
+          <i class="fa fa-rotate-right"></i>
+          <span data-th="ทำข้อสอบซ้ำ (เฉพาะข้อที่ผิด)" data-en="Retry Wrong Answers">ทำข้อสอบซ้ำ (เฉพาะข้อที่ผิด)</span>
+        </button>
       </div>
     </div>
-  </div><!-- /sec-video -->
+  </div>
 
-  <!-- ===== STEP 3 : แบบทดสอบ ===== -->
-  <div class="section" id="sec-quiz">
-    <div class="card-section">
-      <div class="card-header-ttm">
-        <div class="card-header-icon"><i class="fas fa-pencil-alt"></i></div>
-        <div>
-          <div class="card-header-title" id="quiz-title">แบบทดสอบ</div>
-          <div class="card-header-sub"   id="quiz-sub">30 ข้อ — เลือกคำตอบที่ถูกต้อง</div>
-        </div>
-      </div>
-      <div class="card-body-ttm">
-        <div class="retake-banner" id="retake-banner" style="display:none;">
-          <i class="fas fa-redo me-2"></i><span id="retake-txt">ทำเฉพาะข้อที่ตอบผิด</span>
-        </div>
-        <div id="quizArea"><div style="text-align:center;padding:40px;color:var(--ttm-muted);">
-          <span class="spinner-border spinner-border-sm me-2"></span>กำลังโหลดข้อสอบ...
-        </div></div>
-        <div class="text-end mt-4">
-          <button class="btn-ttm-primary" onclick="submitQuiz()" id="btn-submit" style="display:none;">
-            <i class="fas fa-paper-plane me-2"></i><span id="btn-submit-txt">ส่งคำตอบ</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div><!-- /sec-quiz -->
+</div><!-- /main-wrap -->
 
-  <!-- ===== STEP 4 : ผลลัพธ์ ===== -->
-  <div class="section" id="sec-result">
-    <div class="card-section">
-      <div class="card-header-ttm" id="result-header"
-           style="background:linear-gradient(135deg,#1a3a1a,#28a745)">
-        <div class="card-header-icon"><i class="fas fa-trophy"></i></div>
-        <div>
-          <div class="card-header-title" id="result-title">ผลการสอบ</div>
-          <div class="card-header-sub"   id="result-sub">การอบรมข้อกำหนดด้านความปลอดภัย TTM</div>
-        </div>
-      </div>
-      <div class="card-body-ttm" style="text-align:center;">
-        <div class="result-circle pass" id="resultCircle">
-          <div class="result-score" id="resultScore" style="color:#28a745">—</div>
-          <div class="result-total">/30</div>
-        </div>
-        <div style="font-size:22px;font-weight:800;margin-bottom:8px;" id="resultVerdict"></div>
-        <div style="color:var(--ttm-muted);font-size:14px;margin-bottom:24px;" id="resultMsg"></div>
-        <div class="score-breakdown">
-          <div class="score-stat">
-            <div class="score-stat-num" style="color:#28a745" id="res-correct">—</div>
-            <div class="score-stat-lbl" id="res-correct-lbl">ข้อถูก</div>
-          </div>
-          <div class="score-stat">
-            <div class="score-stat-num" style="color:var(--ttm-red)" id="res-wrong">—</div>
-            <div class="score-stat-lbl" id="res-wrong-lbl">ข้อผิด</div>
-          </div>
-          <div class="score-stat">
-            <div class="score-stat-num" style="color:#64748B" id="res-pass-score">—</div>
-            <div class="score-stat-lbl" id="res-pass-lbl">เกณฑ์ผ่าน</div>
-          </div>
-        </div>
-        <!-- PDF -->
-        <div class="pdf-box" id="pdfSection" style="display:none;">
-          <i class="fas fa-file-pdf fa-2x" style="color:#16A34A;margin-bottom:10px;"></i>
-          <div style="font-size:15px;font-weight:700;color:#16A34A;margin-bottom:6px;" id="pdf-ready-txt">
-            กระดาษคำตอบพร้อมแล้ว!</div>
-          <div style="font-size:13px;color:#4B5563;margin-bottom:16px;" id="pdf-note-txt">
-            กดดาวน์โหลดเพื่อบันทึกกระดาษคำตอบของคุณ</div>
-          <a id="pdfLink" href="#" target="_blank" style="text-decoration:none;">
-            <button class="btn-ttm-success">
-              <i class="fas fa-download me-2"></i><span id="pdf-dl-txt">ดาวน์โหลดกระดาษคำตอบ PDF</span>
-            </button>
-          </a>
-        </div>
-        <!-- Loading PDF -->
-        <div id="loadingPdf" style="display:none;color:var(--ttm-muted);margin-top:20px;">
-          <span class="spinner-border spinner-border-sm me-2"></span>
-          <span id="loading-pdf-txt">กำลังสร้างกระดาษคำตอบ PDF...</span>
-        </div>
-        <!-- Retake button -->
-        <div id="retakeSection" style="display:none;margin-top:20px;">
-          <button class="btn-ttm-primary" onclick="retakeQuiz()">
-            <i class="fas fa-redo me-2"></i><span id="retake-btn-txt">ทำแบบทดสอบข้อที่ผิดใหม่</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div><!-- /sec-result -->
-
-</div><!-- /content-wrap -->
-
-<div class="toast-container-ttm" id="toastC"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-// ================================================================
-// ✅ CONFIG — แก้ไขค่าที่นี่
-// ================================================================
+// ==========================================
+// SESSION
+// ==========================================
+const sessionData = JSON.parse(sessionStorage.getItem('ttm_user') || '{}');
+if (!sessionData || !sessionData.username) {
+  window.location.href = '?page=index';
+}
 
-/**
- * VIDEO_UNLOCK_SECONDS
- * จำนวนวินาทีที่ผู้เข้าอบรมต้องดูวิดีโอก่อนที่ปุ่ม "ทำแบบทดสอบ" จะปรากฏ
- *
- * ตัวอย่าง:
- *   const VIDEO_UNLOCK_SECONDS = 60;    // ต้องดู 1 นาที
- *   const VIDEO_UNLOCK_SECONDS = 300;   // ต้องดู 5 นาที
- *   const VIDEO_UNLOCK_SECONDS = 1800;  // ต้องดู 30 นาที
- *   const VIDEO_UNLOCK_SECONDS = 0;     // ไม่บังคับ — แสดงปุ่มทันที
- *
- * หมายเหตุ: ถ้ามีหลายคลิป ตัวนับจะรวมเวลาทุกคลิปเข้าด้วยกัน
- */
-const VIDEO_UNLOCK_SECONDS = 30; // ← แก้ที่นี่
+document.getElementById('headerUsername').textContent = sessionData.displayName || sessionData.username;
+let currentLang = sessionStorage.getItem('ttm_lang') || localStorage.getItem('ttm_lang') || 'th';
 
-// ================================================================
-// STATE
-// ================================================================
-let currentLang    = 'th';
-let userData       = {};
-let formData       = {};
-let allQuestions   = [];
-let quizQuestions  = [];        // shuffled 30
-let currentAnswers = {};        // { qIndex: '1'|'2'|'3'|'4' }
-let wrongIndices   = [];
-let isRetake       = false;
-let score          = 0;
-let passingScore   = 27;
-let videos         = [];
-
-// --- Timer state ---
-let timerElapsed   = 0;         // วินาทีที่ผ่านไปทั้งหมด
-let timerInterval  = null;
-let timerUnlocked  = false;
-let videoPlaying   = false;     // iframe กำลังเล่นอยู่หรือไม่
-
-// ================================================================
-// i18n
-// ================================================================
-const T = {
-  th: {
-    logoutTxt:'ออกจากระบบ',
-    'info-title':'ข้อมูลผู้เข้าอบรม','info-sub':'กรุณากรอกข้อมูลให้ครบถ้วนก่อนเริ่มอบรม',
-    'vid-title':'วิดีโอการอบรม','vid-sub':'กรุณาดูวิดีโอให้ครบเวลาก่อนทำแบบทดสอบ',
-    'vid-info-txt':'ระบบนับเวลาการดูวิดีโอ — ปุ่มทำแบบทดสอบจะปรากฏเมื่อดูครบตามเวลาที่กำหนด',
-    'quiz-title':'แบบทดสอบ','quiz-sub':'30 ข้อ — เลือกคำตอบที่ถูกต้อง',
-    'btn-next-info':'ถัดไป: ดูวิดีโออบรม',
-    'btn-to-quiz-txt-locked':'ดูวิดีโอให้ครบก่อน',
-    'btn-to-quiz-txt-unlocked':'เริ่มทำแบบทดสอบได้เลย',
-    'btn-submit-txt':'ส่งคำตอบ',
-    'retake-txt':'ทำเฉพาะข้อที่ตอบผิด',
-    'pdf-ready-txt':'กระดาษคำตอบพร้อมแล้ว!',
-    'pdf-note-txt':'กดดาวน์โหลดเพื่อบันทึกกระดาษคำตอบของคุณ',
-    'pdf-dl-txt':'ดาวน์โหลดกระดาษคำตอบ PDF',
-    'loading-pdf-txt':'กำลังสร้างกระดาษคำตอบ PDF...',
-    'retake-btn-txt':'ทำแบบทดสอบข้อที่ผิดใหม่',
-    'res-correct-lbl':'ข้อถูก','res-wrong-lbl':'ข้อผิด','res-pass-lbl':'เกณฑ์ผ่าน',
-    PASS_MSG:'ยินดีด้วย! คุณผ่านการอบรมแล้ว',
-    FAIL_MSG:'คุณยังไม่ผ่านเกณฑ์ กรุณาทำข้อที่ผิดใหม่',
-    PASS_VERDICT:'ผ่าน ✓', FAIL_VERDICT:'ไม่ผ่าน ✗',
-    opts:['ก','ข','ค','ง'], qLabel:'ข้อที่',
-    fillAll:'กรุณาตอบให้ครบทุกข้อ',
-    fillInfo:'กรุณากรอกข้อมูลที่จำเป็นให้ครบ (ชื่อ, อายุ, กรุ๊ปเลือด, โทร, จังหวัด, บริษัท)',
-    sl:['ข้อมูล','วิดีโอ','แบบทดสอบ','ผลลัพธ์'],
-    timerLabel:'⏱ เวลาที่ดูแล้ว',
-    timerRemain:'เหลืออีก',
-    timerDone:'ดูครบแล้ว — ปุ่มพร้อมใช้งาน ✓',
-    unlockBadgeTxt:'ปลดล็อกแล้ว — กดปุ่มได้เลย!',
-    noVideos:'ไม่พบวิดีโอ — ระบบปลดล็อกอัตโนมัติ',
-    vidLoading:'กำลังโหลดวิดีโอ...',
-    playHint:'▶ กดเล่นวิดีโอเพื่อเริ่มนับเวลา'
-  },
-  en: {
-    logoutTxt:'Logout',
-    'info-title':'Trainee Information','info-sub':'Please fill in all required fields before starting',
-    'vid-title':'Training Video','vid-sub':'Watch the video for the required duration',
-    'vid-info-txt':'The system tracks your watch time — the quiz button appears after the required duration',
-    'quiz-title':'Quiz','quiz-sub':'30 Questions — Choose the correct answer',
-    'btn-next-info':'Next: Watch Training Video',
-    'btn-to-quiz-txt-locked':'Watch video first',
-    'btn-to-quiz-txt-unlocked':'Start Quiz Now',
-    'btn-submit-txt':'Submit Answers',
-    'retake-txt':'Retake wrong questions only',
-    'pdf-ready-txt':'Answer Sheet Ready!',
-    'pdf-note-txt':'Click download to save your answer sheet',
-    'pdf-dl-txt':'Download Answer Sheet PDF',
-    'loading-pdf-txt':'Generating PDF...',
-    'retake-btn-txt':'Retake wrong questions',
-    'res-correct-lbl':'Correct','res-wrong-lbl':'Wrong','res-pass-lbl':'Pass Score',
-    PASS_MSG:'Congratulations! You passed the training.',
-    FAIL_MSG:'Not passed. Please retake the wrong questions.',
-    PASS_VERDICT:'PASSED ✓', FAIL_VERDICT:'FAILED ✗',
-    opts:['A','B','C','D'], qLabel:'Q.',
-    fillAll:'Please answer all questions',
-    fillInfo:'Please fill in required fields (Name, Age, Blood Type, Phone, Province, Company)',
-    sl:['Info','Video','Quiz','Result'],
-    timerLabel:'⏱ Time watched',
-    timerRemain:'remaining',
-    timerDone:'Complete — button is ready ✓',
-    unlockBadgeTxt:'Unlocked — you may proceed!',
-    noVideos:'No videos found — auto-unlocked',
-    vidLoading:'Loading video...',
-    playHint:'▶ Press play to start the timer'
-  }
-};
-
-// ================================================================
-// Language
-// ================================================================
+// ==========================================
+// LANGUAGE
+// ==========================================
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('ttm_lang', lang);
-  document.getElementById('btnTH').classList.toggle('active', lang==='th');
-  document.getElementById('btnEN').classList.toggle('active', lang==='en');
-  const t = T[lang];
-  ['logoutTxt','info-title','info-sub','vid-title','vid-sub','vid-info-txt',
-   'quiz-title','quiz-sub','btn-next-info','btn-submit-txt','retake-txt',
-   'pdf-ready-txt','pdf-note-txt','pdf-dl-txt','loading-pdf-txt','retake-btn-txt',
-   'res-correct-lbl','res-wrong-lbl','res-pass-lbl','timerLabel'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = t[id] || '';
-  });
-  // Steps
-  ['sl-1','sl-2','sl-3','sl-4'].forEach((id,i) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = t.sl[i];
-  });
-  // Quiz btn
-  if (!timerUnlocked) {
-    const el = document.getElementById('btn-to-quiz-txt');
-    if (el) el.textContent = t['btn-to-quiz-txt-locked'];
-  }
-  // Form labels
-  const lbls = {
-    'lbl-fname': lang==='th'?'ชื่อ-นามสกุล *':'Full Name *',
-    'lbl-fage':  lang==='th'?'อายุ *':'Age *',
-    'lbl-fblood':lang==='th'?'กรุ๊ปเลือด *':'Blood Type *',
-    'lbl-ftel':  lang==='th'?'เบอร์โทรศัพท์ *':'Phone *',
-    'lbl-addr':  lang==='th'?'ที่อยู่':'Address',
-    'lbl-fno':   lang==='th'?'บ้านเลขที่':'House No.',
-    'lbl-fmoo':  lang==='th'?'หมู่':'Moo',
-    'lbl-froad': lang==='th'?'ถนน':'Road',
-    'lbl-fsub':  lang==='th'?'แขวง/ตำบล':'Subdistrict',
-    'lbl-fdist': lang==='th'?'เขต/อำเภอ':'District',
-    'lbl-fcity': lang==='th'?'จังหวัด *':'Province *',
-    'lbl-fpost': lang==='th'?'รหัสไปรษณีย์':'Post Code',
-    'lbl-fcomp': lang==='th'?'สังกัดบริษัท *':'Company *'
-  };
-  Object.entries(lbls).forEach(([id,txt]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = txt;
-  });
-  if (quizQuestions.length) renderQuiz();
-  updateTimerDisplay();
-}
-
-// ================================================================
-// Steps navigation
-// ================================================================
-function showSection(name) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('sec-'+name).classList.add('active');
-  window.scrollTo(0, 0);
-  const map = { info:1, video:2, quiz:3, result:4 };
-  const cur = map[name];
-  [1,2,3,4].forEach(i => {
-    const ic  = document.getElementById('si-'+i);
-    const lbl = document.getElementById('sl-'+i);
-    if (i < cur)       { ic.className='step-icon done';   lbl.className='step-label done'; }
-    else if (i === cur){ ic.className='step-icon active'; lbl.className='step-label active'; }
-    else               { ic.className='step-icon';        lbl.className='step-label'; }
-    if (i < 4) {
-      const conn = document.getElementById('sc-'+i);
-      if (conn) conn.className = 'step-connector' + (i < cur ? ' done' : '');
+  sessionStorage.setItem('ttm_lang', lang);
+  document.querySelectorAll('[data-th]').forEach(el => {
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = lang === 'th' ? el.dataset.th : el.dataset.en;
+    } else {
+      el.textContent = lang === 'th' ? el.dataset.th : el.dataset.en;
     }
   });
-}
-
-// ================================================================
-// STEP 1 → 2
-// ================================================================
-function goToVideo() {
-  const name    = document.getElementById('f-name').value.trim();
-  const age     = document.getElementById('f-age').value.trim();
-  const blood   = document.getElementById('f-blood').value;
-  const tel     = document.getElementById('f-tel').value.trim();
-  const city    = document.getElementById('f-city').value.trim();
-  const company = document.getElementById('f-company').value.trim();
-  if (!name||!age||!blood||!tel||!city||!company) {
-    showToast(T[currentLang].fillInfo, 'error'); return;
+  document.querySelectorAll('option[data-th]').forEach(opt => {
+    opt.textContent = lang === 'th' ? opt.dataset.th : opt.dataset.en;
+  });
+  document.getElementById('langTH').classList.toggle('active', lang === 'th');
+  document.getElementById('langEN').classList.toggle('active', lang === 'en');
+  // Re-render quiz if active
+  if (document.getElementById('section-quiz').classList.contains('active')) {
+    renderQuiz();
   }
-  formData = {
-    name, age, blood, tel, city, company,
-    noAddress:   document.getElementById('f-no').value.trim(),
-    moo:         document.getElementById('f-moo').value.trim(),
-    road:        document.getElementById('f-road').value.trim(),
-    subdistrict: document.getElementById('f-sub').value.trim(),
-    district:    document.getElementById('f-dist').value.trim(),
-    postCode:    document.getElementById('f-post').value.trim(),
-    username:    userData.username || ''
-  };
-  showSection('video');
-  loadVideos();
 }
 
-// ================================================================
-// VIDEO + TIMER
-// ================================================================
+setLang(currentLang);
+
+// ==========================================
+// STEPPER
+// ==========================================
+const steps = ['step1', 'step2', 'step3', 'step4'];
+const sections = ['section-info', 'section-video', 'section-quiz', 'section-result'];
+let currentStep = 0;
+
+function goStep(n) {
+  sections.forEach((s, i) => {
+    document.getElementById(s).classList.toggle('active', i === n);
+  });
+  steps.forEach((s, i) => {
+    const el = document.getElementById(s);
+    el.className = 'step ' + (i < n ? 'done' : i === n ? 'active' : '');
+  });
+  currentStep = n;
+  window.scrollTo(0, 0);
+}
+
+// ==========================================
+// ALERT
+// ==========================================
+function showAlert(msg, type) {
+  const bar = document.getElementById('alertBar');
+  bar.textContent = msg;
+  bar.className = `alert-bar show ${type}`;
+  setTimeout(() => { bar.className = 'alert-bar'; }, 4000);
+}
+
+// ==========================================
+// TRAINEE INFO
+// ==========================================
+let traineeData = {};
+
+function submitInfo() {
+  const data = {
+    name: document.getElementById('infName').value.trim(),
+    age: document.getElementById('infAge').value.trim(),
+    blood: document.getElementById('infBlood').value,
+    noAddress: document.getElementById('infNo').value.trim(),
+    moo: document.getElementById('infMoo').value.trim(),
+    road: document.getElementById('infRoad').value.trim(),
+    subdistrict: document.getElementById('infSubdistrict').value.trim(),
+    district: document.getElementById('infDistrict').value.trim(),
+    city: document.getElementById('infCity').value.trim(),
+    postCode: document.getElementById('infPost').value.trim(),
+    tel: document.getElementById('infTel').value.trim(),
+    company: document.getElementById('infCompany').value.trim(),
+    email: document.getElementById('infEmail').value.trim()
+  };
+
+  if (!data.name || !data.age || !data.blood || !data.tel || !data.company || !data.email) {
+    showAlert(
+      currentLang === 'th' ? 'กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, อายุ, กลุ่มเลือด, โทร, บริษัท, อีเมล)' : 'Please fill all required fields',
+      'error'
+    );
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    showAlert(currentLang === 'th' ? 'รูปแบบอีเมลไม่ถูกต้อง' : 'Invalid email format', 'error');
+    return;
+  }
+
+  traineeData = data;
+  loadVideos();
+  goStep(1);
+}
+
+// ==========================================
+// VIDEOS
+// ==========================================
+let videos = [];
+let currentVideoIdx = 0;
+let videoCompleted = false;
+let ytPlayer = null;
+let ytCheckInterval = null;
+
 function loadVideos() {
   google.script.run
-    .withSuccessHandler(function(vs) {
-      vs.sort((a,b) => a.order - b.order);
-      videos = vs;
-      if (!vs.length) {
-        // ไม่มีวิดีโอ — ปลดล็อกทันที
-        document.getElementById('ytFrame').src = '';
-        document.getElementById('videoWrap').style.display = 'none';
-        document.getElementById('timerNote').textContent = T[currentLang].noVideos;
-        unlockQuizBtn();
-        return;
+    .withSuccessHandler(function(r) {
+      videos = (r.success ? r.data : []).filter(v => v.active);
+      if (videos.length > 0) {
+        renderVideo(0);
+      } else {
+        document.getElementById('videoArea').innerHTML = `
+          <div style="text-align:center; padding:40px; color:var(--text-muted);">
+            <i class="fa fa-exclamation-triangle fa-2x mb-3" style="display:block; color:var(--accent)"></i>
+            <span>${currentLang === 'th' ? 'ยังไม่มีวิดีโออบรม กรุณาติดต่อผู้ดูแลระบบ' : 'No training videos available. Please contact admin.'}</span>
+          </div>
+        `;
       }
-      buildVideoTabs();
-      loadVideoByIndex(0);
-      // ถ้า VIDEO_UNLOCK_SECONDS = 0 ปลดล็อกทันที
-      if (VIDEO_UNLOCK_SECONDS <= 0) { unlockQuizBtn(); return; }
-      startTimer();
-    })
-    .withFailureHandler(function() {
-      // โหลดไม่ได้ — ปลดล็อกทันที
-      unlockQuizBtn();
     })
     .getVideos();
 }
 
-function buildVideoTabs() {
-  const bar = document.getElementById('videoTabsBar');
-  if (videos.length > 1) {
-    bar.style.display = 'flex';
-    bar.innerHTML = videos.map((v,i) =>
-      `<button class="btn-ttm-primary" id="vTab${i}" onclick="loadVideoByIndex(${i})"
-        style="font-size:13px;padding:8px 14px;${i===0?'':'background:rgba(192,57,43,.4);box-shadow:none;'}">
-        ${i+1}. ${v.title}
-      </button>`
-    ).join('');
-  } else {
-    bar.style.display = 'none';
+function renderVideo(idx) {
+  const v = videos[idx];
+  const embedUrl = v.url + '?enablejsapi=1&rel=0&modestbranding=1';
+
+  document.getElementById('videoArea').innerHTML = `
+    <div style="margin-bottom:10px; font-weight:600; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
+      <span style="color:var(--accent); font-size:0.8rem;">${idx + 1}/${videos.length}</span>
+      ${v.title}
+    </div>
+    <div class="video-container">
+      <iframe id="ytFrame"
+        src="${embedUrl}"
+        allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
+    </div>
+  `;
+
+  videoCompleted = false;
+  document.getElementById('goQuizBtn').disabled = true;
+  startVideoCheck();
+}
+
+function startVideoCheck() {
+  if (ytCheckInterval) clearInterval(ytCheckInterval);
+  // Use postMessage to check YouTube player state
+  window.addEventListener('message', handleYTMessage);
+  ytCheckInterval = setInterval(pingYTPlayer, 2000);
+}
+
+let videoProgress = 0;
+let videoDuration = 0;
+
+function pingYTPlayer() {
+  const frame = document.getElementById('ytFrame');
+  if (frame) {
+    try {
+      frame.contentWindow.postMessage('{"event":"command","func":"getDuration","args":""}', '*');
+      frame.contentWindow.postMessage('{"event":"command","func":"getCurrentTime","args":""}', '*');
+    } catch (e) {}
   }
 }
 
-function loadVideoByIndex(idx) {
-  videos.forEach((_,i) => {
-    const tab = document.getElementById('vTab'+i);
-    if (tab) tab.style.background = i===idx
-      ? 'linear-gradient(135deg,var(--ttm-red),#922B21)'
-      : 'rgba(192,57,43,.4)';
-  });
-  let url = videos[idx].url || '';
-  // เพิ่ม enablejsapi สำหรับ postMessage tracking
-  if (url.includes('youtube.com/embed') || url.includes('youtu.be')) {
-    if (!url.includes('enablejsapi')) {
-      url += (url.includes('?') ? '&' : '?') + 'enablejsapi=1&rel=0&modestbranding=1';
-    }
-  }
-  document.getElementById('ytFrame').src = url;
-  document.getElementById('timerNote').textContent = T[currentLang].playHint;
-}
-
-// ================================================================
-// ✅ TIMER — นับเวลาโดยใช้ setInterval ไม่พึ่ง YouTube API
-// ================================================================
-function startTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(function() {
-    // นับทุกวินาทีเมื่อ iframe แสดงอยู่ (ใช้วิธีนับต่อเนื่องเพื่อความเรียบง่าย)
-    // ผู้เขียนโค้ดสามารถเปลี่ยนเป็นนับเฉพาะตอนเล่นได้ โดยผูกกับ videoPlaying
-    timerElapsed++;
-    updateTimerDisplay();
-    if (timerElapsed >= VIDEO_UNLOCK_SECONDS && !timerUnlocked) {
-      unlockQuizBtn();
-    }
-  }, 1000);
-}
-
-function updateTimerDisplay() {
-  const t = T[currentLang];
-  const el = document.getElementById('timerLabel');
-  if (el) el.textContent = t.timerLabel;
-
-  if (VIDEO_UNLOCK_SECONDS <= 0) return;
-
-  const pct = Math.min(100, (timerElapsed / VIDEO_UNLOCK_SECONDS) * 100);
-  document.getElementById('timerBarFill').style.width = pct + '%';
-
-  const countEl = document.getElementById('timerCountdown');
-  if (timerUnlocked) {
-    if (countEl) countEl.textContent = '✓';
-    document.getElementById('timerNote').textContent = t.timerDone;
-  } else {
-    const remain = Math.max(0, VIDEO_UNLOCK_SECONDS - timerElapsed);
-    const m = Math.floor(remain / 60);
-    const s = remain % 60;
-    const timeStr = m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${s}s`;
-    if (countEl) countEl.textContent = `${t.timerRemain} ${timeStr}`;
-  }
-}
-
-function unlockQuizBtn() {
-  if (timerUnlocked) return;
-  timerUnlocked = true;
-  if (timerInterval) clearInterval(timerInterval);
-
-  // อัปเดต progress bar เป็น 100%
-  document.getElementById('timerBarFill').style.width = '100%';
-  document.getElementById('timerNote').textContent = T[currentLang].timerDone;
-  const countEl = document.getElementById('timerCountdown');
-  if (countEl) countEl.textContent = '✓';
-
-  // แสดง badge + เปิดปุ่ม
-  const badge = document.getElementById('unlockBadge');
-  badge.style.display = 'inline-flex';
-  document.getElementById('unlockBadgeTxt').textContent = T[currentLang].unlockBadgeTxt;
-
-  const btn = document.getElementById('btn-to-quiz');
-  btn.disabled = false;
-  document.getElementById('quizBtnIcon').className = 'fas fa-unlock me-1';
-  document.getElementById('btn-to-quiz-txt').textContent = T[currentLang]['btn-to-quiz-txt-unlocked'];
-}
-
-// Listen YouTube postMessage เพื่อเพิ่ม UX (optional)
-window.addEventListener('message', function(e) {
+function handleYTMessage(event) {
   try {
-    const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-    if (data && data.event === 'onStateChange') {
-      videoPlaying = (data.info === 1); // 1 = playing
+    const data = JSON.parse(event.data);
+    if (data.info) {
+      if (data.info.duration) videoDuration = data.info.duration;
+      if (data.info.currentTime && videoDuration > 0) {
+        videoProgress = data.info.currentTime / videoDuration;
+        updateVideoProgress(videoProgress);
+      }
+      // playerState 0 = ended
+      if (data.info.playerState === 0) {
+        onVideoEnded();
+      }
     }
-  } catch(_) {}
-});
+  } catch (e) {}
+}
 
-// ================================================================
-// STEP 2 → 3
-// ================================================================
+function updateVideoProgress(ratio) {
+  const pct = Math.min(100, Math.round(ratio * 100));
+  document.getElementById('videoProgressBar').style.width = pct + '%';
+  document.getElementById('videoProgressText').textContent = pct + '%';
+}
+
+function onVideoEnded() {
+  if (videoCompleted) return;
+  videoCompleted = true;
+  updateVideoProgress(1);
+  clearInterval(ytCheckInterval);
+  document.getElementById('videoStatus').innerHTML = `
+    <span style="color:var(--success);">
+      <i class="fa fa-check-circle me-1"></i>
+      <span>${currentLang === 'th' ? 'ดูวิดีโอครบแล้ว! สามารถทำแบบทดสอบได้' : 'Video complete! You may now take the quiz.'}</span>
+    </span>
+  `;
+  document.getElementById('goQuizBtn').disabled = false;
+}
+
+// ==========================================
+// QUIZ
+// ==========================================
+let allQuestions = [];
+let quizQuestions = [];
+let userAnswers = {};
+let settings = {};
+let isRetry = false;
+let wrongIndices = []; // original indices of wrong questions
+
 function goToQuiz() {
-  showSection('quiz');
-  if (!quizQuestions.length) buildQuiz();
-  else renderQuiz();
+  google.script.run
+    .withSuccessHandler(function(r) { settings = r.success ? r.data : { passing_score: 27 }; })
+    .getSettings();
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      allQuestions = r.success ? r.data : [];
+      if (allQuestions.length < 30) {
+        showAlert(
+          currentLang === 'th' ? `ข้อสอบไม่เพียงพอ (มี ${allQuestions.length} ข้อ ต้องการ 30 ข้อ)` : `Not enough questions (${allQuestions.length}/30)`,
+          'error'
+        );
+        return;
+      }
+      // Shuffle and take 30
+      quizQuestions = shuffle([...allQuestions]).slice(0, 30);
+      // Shuffle options for each question
+      quizQuestions = quizQuestions.map(q => shuffleOptions(q));
+      userAnswers = {};
+      isRetry = false;
+      document.getElementById('retryBanner').style.display = 'none';
+      renderQuiz();
+      goStep(2);
+    })
+    .getQuestions();
 }
 
-// ================================================================
-// QUIZ ENGINE
-// ================================================================
+function shuffleOptions(q) {
+  // Build options array with original positions
+  const options = [
+    { th: q.opt1TH, en: q.opt1EN, original: 1 },
+    { th: q.opt2TH, en: q.opt2EN, original: 2 },
+    { th: q.opt3TH, en: q.opt3EN, original: 3 },
+    { th: q.opt4TH, en: q.opt4EN, original: 4 },
+  ];
+  const shuffled = shuffle(options);
+  // Find new position of correct answer
+  const newCorrectIdx = shuffled.findIndex(o => o.original === parseInt(q.answer)) + 1;
+  return { ...q, shuffledOptions: shuffled, shuffledAnswer: newCorrectIdx };
+}
+
 function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return a;
+  return arr;
 }
 
-function buildQuiz() {
-  document.getElementById('quizArea').innerHTML =
-    '<div style="text-align:center;padding:40px;color:var(--ttm-muted);">' +
-    '<span class="spinner-border spinner-border-sm me-2"></span>กำลังโหลดข้อสอบ...</div>';
+const optLetters_th = ['ก', 'ข', 'ค', 'ง'];
+const optLetters_en = ['A', 'B', 'C', 'D'];
 
-  google.script.run.withSuccessHandler(function(settings) {
-    passingScore = parseInt(settings.passing_score) || 27;
-  }).getSettings();
-
-  google.script.run.withSuccessHandler(function(qs) {
-    allQuestions = qs;
-    const pool = qs.length >= 30 ? shuffle(qs).slice(0,30) : shuffle(qs);
-    quizQuestions = pool.map(q => {
-      const opts = [
-        { key:'1', th: q.opt1TH, en: q.opt1EN },
-        { key:'2', th: q.opt2TH, en: q.opt2EN },
-        { key:'3', th: q.opt3TH, en: q.opt3EN },
-        { key:'4', th: q.opt4TH, en: q.opt4EN }
-      ];
-      return { ...q, shuffledOpts: shuffle(opts) };
-    });
-    isRetake = false;
-    wrongIndices = [];
-    currentAnswers = {};
-    renderQuiz();
-    document.getElementById('btn-submit').style.display = 'inline-flex';
-    document.getElementById('retake-banner').style.display = 'none';
-  }).getQuestions();
+function getOptLetters() {
+  return currentLang === 'th' ? optLetters_th : optLetters_en;
 }
 
 function renderQuiz() {
-  const t = T[currentLang];
-  const list = isRetake
-    ? quizQuestions.filter((_,i) => wrongIndices.includes(i))
-    : quizQuestions;
+  const container = document.getElementById('quizContainer');
+  const letters = getOptLetters();
+  const activeQuestions = isRetry ? quizQuestions.filter((_, i) => wrongIndices.includes(i)) : quizQuestions;
 
-  if (!list.length) {
-    document.getElementById('quizArea').innerHTML =
-      '<p style="color:var(--ttm-muted);text-align:center;">ไม่มีข้อสอบ</p>';
+  container.innerHTML = activeQuestions.map((q, displayIdx) => {
+    const realIdx = isRetry ? wrongIndices[displayIdx] : displayIdx;
+    const questionText = currentLang === 'th' ? q.questionTH : (q.questionEN || q.questionTH);
+    const opts = q.shuffledOptions || [
+      { th: q.opt1TH, en: q.opt1EN },
+      { th: q.opt2TH, en: q.opt2EN },
+      { th: q.opt3TH, en: q.opt3EN },
+      { th: q.opt4TH, en: q.opt4EN },
+    ];
+
+    return `
+      <div class="question-card ${isRetry ? 'incorrect-only' : ''}" id="qcard-${realIdx}">
+        <div class="question-num">${realIdx + 1}</div>
+        <div class="question-text">${questionText}</div>
+        <div class="options-grid" id="opts-${realIdx}">
+          ${opts.map((opt, optIdx) => {
+            const optText = currentLang === 'th' ? opt.th : (opt.en || opt.th);
+            const selectedClass = userAnswers[realIdx] === optIdx + 1 ? 'selected' : '';
+            return `
+              <button class="option-btn ${selectedClass}" onclick="selectAnswer(${realIdx}, ${optIdx + 1})" id="opt-${realIdx}-${optIdx + 1}">
+                <span class="option-label">${letters[optIdx]}</span>
+                <span>${optText}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  updateQuizProgress(activeQuestions);
+}
+
+function selectAnswer(qIdx, optNum) {
+  userAnswers[qIdx] = optNum;
+  const opts = document.querySelectorAll(`#opts-${qIdx} .option-btn`);
+  opts.forEach((btn, i) => {
+    btn.classList.toggle('selected', i + 1 === optNum);
+  });
+  const activeQ = isRetry ? quizQuestions.filter((_, i) => wrongIndices.includes(i)) : quizQuestions;
+  updateQuizProgress(activeQ);
+}
+
+function updateQuizProgress(activeQuestions) {
+  const answered = activeQuestions.filter((_, i) => {
+    const realIdx = isRetry ? wrongIndices[i] : i;
+    return userAnswers[realIdx] !== undefined;
+  }).length;
+  const total = activeQuestions.length;
+  const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+
+  document.getElementById('quizProgressBar').style.width = pct + '%';
+  document.getElementById('quizProgressText').textContent = `${total} ${currentLang === 'th' ? 'ข้อ' : 'questions'}`;
+  document.getElementById('answeredCount').textContent = answered + '/' + total;
+  document.getElementById('submitQuizBtn').disabled = answered < total;
+}
+
+// ==========================================
+// SUBMIT QUIZ
+// ==========================================
+let finalAnswers = {};
+let finalScore = 0;
+let pdfBase64 = null;
+let pdfFileName = null;
+
+function submitQuiz() {
+  const activeQ = isRetry ? quizQuestions.filter((_, i) => wrongIndices.includes(i)) : quizQuestions;
+
+  // Check all answered
+  const unanswered = activeQ.filter((_, i) => {
+    const ri = isRetry ? wrongIndices[i] : i;
+    return userAnswers[ri] === undefined;
+  });
+
+  if (unanswered.length > 0) {
+    showAlert(currentLang === 'th' ? 'กรุณาตอบทุกข้อก่อนส่ง' : 'Please answer all questions before submitting', 'warning');
     return;
   }
 
-  document.getElementById('quizArea').innerHTML = list.map((q, di) => {
-    const realIdx = isRetake ? wrongIndices[di] : di;
-    return `<div class="q-card" id="qcard-${realIdx}">
-      <div class="q-number">${t.qLabel} ${realIdx+1}</div>
-      <div class="q-text">${currentLang==='th'?(q.questionTH||q.questionEN):(q.questionEN||q.questionTH)}</div>
-      ${q.shuffledOpts.map((opt,oi) => {
-        const label  = t.opts[oi];
-        const txt    = currentLang==='th'?(opt.th||opt.en):(opt.en||opt.th);
-        const isSel  = currentAnswers[realIdx] === opt.key;
-        return `<div class="q-option${isSel?' selected':''}"
-                     onclick="selectOpt(${realIdx},'${opt.key}',this)">
-          <div class="opt-badge">${label}</div>
-          <div class="opt-text">${txt}</div>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }).join('');
-}
-
-function selectOpt(qIdx, key, el) {
-  currentAnswers[qIdx] = key;
-  const card = document.getElementById('qcard-'+qIdx);
-  card.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function submitQuiz() {
-  const list = isRetake
-    ? quizQuestions.filter((_,i) => wrongIndices.includes(i))
-    : quizQuestions;
-
-  // ตรวจว่าตอบครบหรือยัง
-  const unanswered = list.filter((_,di) => {
-    const realIdx = isRetake ? wrongIndices[di] : di;
-    return !currentAnswers[realIdx];
+  // Calculate score: check all 30 questions
+  // If retry mode, old correct answers are kept
+  // Merge with correct ones from previous attempts
+  const correctMap = {}; // qIdx -> boolean
+  quizQuestions.forEach((q, i) => {
+    const userAns = userAnswers[i];
+    const correctAns = q.shuffledAnswer;
+    correctMap[i] = userAns === correctAns;
   });
-  if (unanswered.length) { showToast(T[currentLang].fillAll,'error'); return; }
 
-  // คำนวณคะแนน
-  let correct = 0;
-  const newWrong = [];
-  quizQuestions.forEach((q,i) => {
-    if (currentAnswers[i] === String(q.answer)) correct++;
-    else newWrong.push(i);
+  // Update finalAnswers for all 30
+  quizQuestions.forEach((q, i) => {
+    if (userAnswers[i] !== undefined) {
+      // Map back to original option number
+      const shuffledOpt = q.shuffledOptions[userAnswers[i] - 1];
+      finalAnswers[i + 1] = shuffledOpt ? shuffledOpt.original : userAnswers[i];
+    }
   });
-  score        = correct;
-  wrongIndices = newWrong;
 
-  showSection('result');
-  const t = T[currentLang];
-  document.getElementById('resultScore').textContent   = score;
-  document.getElementById('res-correct').textContent   = correct;
-  document.getElementById('res-wrong').textContent     = 30 - correct;
-  document.getElementById('res-pass-score').textContent= passingScore;
+  const score = Object.values(correctMap).filter(Boolean).length;
+  finalScore = score;
+  const passingScore = parseInt(settings.passing_score || 27);
 
-  const ansMap = {};
-  quizQuestions.forEach((q,i) => { ansMap['ans'+(i+1)] = currentAnswers[i] || ''; });
+  // Show results
+  showQuizResult(correctMap);
+
+  // Save results
+  google.script.run.saveTrainingResult(traineeData, finalAnswers, score, currentLang);
 
   if (score >= passingScore) {
-    document.getElementById('resultCircle').className        = 'result-circle pass';
-    document.getElementById('resultScore').style.color       = '#28a745';
-    document.getElementById('resultVerdict').textContent     = t.PASS_VERDICT;
-    document.getElementById('resultVerdict').style.color     = '#28a745';
-    document.getElementById('resultMsg').textContent         = t.PASS_MSG;
-    document.getElementById('result-header').style.background= 'linear-gradient(135deg,#1a3a1a,#28a745)';
-    document.getElementById('retakeSection').style.display   = 'none';
-    document.getElementById('loadingPdf').style.display      = 'block';
-    document.getElementById('pdfSection').style.display      = 'none';
+    // Generate PDF
+    const btn = document.getElementById('downloadBtn');
+    if (btn) btn.disabled = true;
 
     google.script.run
-      .withSuccessHandler(function(res) {
-        document.getElementById('loadingPdf').style.display = 'none';
-        if (res && res.success && res.pdfUrl) {
-          document.getElementById('pdfSection').style.display = 'block';
-          document.getElementById('pdfLink').href = res.pdfUrl;
+      .withSuccessHandler(function(r) {
+        if (r.success) {
+          pdfBase64 = r.base64;
+          pdfFileName = r.fileName;
+          if (btn) btn.disabled = false;
+        } else {
+          showAlert(currentLang === 'th' ? 'ไม่สามารถสร้าง PDF ได้: ' + r.message : 'Could not generate PDF: ' + r.message, 'error');
         }
       })
-      .withFailureHandler(function(err) {
-        document.getElementById('loadingPdf').style.display = 'none';
-        showToast('PDF error: '+(err.message||''), 'error');
+      .withFailureHandler(err => {
+        showAlert('PDF error: ' + err.message, 'error');
       })
-      .submitQuiz(formData, ansMap, score, 30, currentLang);
+      .generateAnswerSheetPDF(traineeData, finalAnswers, score, currentLang);
+  }
+}
+
+function showQuizResult(correctMap) {
+  const score = Object.values(correctMap).filter(Boolean).length;
+  const passingScore = parseInt(settings.passing_score || 27);
+  const pass = score >= passingScore;
+
+  // Show wrong answers in quiz
+  quizQuestions.forEach((q, i) => {
+    const card = document.getElementById('qcard-' + i);
+    if (!card) return;
+    const opts = card.querySelectorAll('.option-btn');
+    const userAns = userAnswers[i];
+    const correctAns = q.shuffledAnswer;
+
+    opts.forEach((btn, j) => {
+      btn.disabled = true;
+      if (j + 1 === correctAns) {
+        btn.classList.add('correct');
+      } else if (j + 1 === userAns && userAns !== correctAns) {
+        btn.classList.add('wrong');
+      }
+    });
+  });
+
+  // Set result page
+  const circle = document.getElementById('resultCircle');
+  circle.className = `result-circle ${pass ? 'pass' : 'fail'}`;
+  document.getElementById('resultScore').textContent = score;
+
+  if (pass) {
+    document.getElementById('resultTitle').textContent = currentLang === 'th' ? '🎉 สอบผ่าน!' : '🎉 Passed!';
+    document.getElementById('resultSub').textContent = currentLang === 'th'
+      ? `คุณได้คะแนน ${score}/30 ผ่านเกณฑ์ ${passingScore} คะแนน`
+      : `You scored ${score}/30, passing score is ${passingScore}`;
+    document.getElementById('passArea').style.display = '';
+    document.getElementById('failArea').style.display = 'none';
   } else {
-    document.getElementById('resultCircle').className        = 'result-circle fail';
-    document.getElementById('resultScore').style.color       = 'var(--ttm-red)';
-    document.getElementById('resultVerdict').textContent     = t.FAIL_VERDICT;
-    document.getElementById('resultVerdict').style.color     = 'var(--ttm-red)';
-    document.getElementById('resultMsg').textContent         = t.FAIL_MSG;
-    document.getElementById('result-header').style.background= 'linear-gradient(135deg,#3a1a1a,#C0392B)';
-    document.getElementById('retakeSection').style.display   = 'block';
-    document.getElementById('pdfSection').style.display      = 'none';
-    document.getElementById('loadingPdf').style.display      = 'none';
-    // บันทึกผล FAIL ด้วย
-    google.script.run.submitQuiz(formData, ansMap, score, 30, currentLang);
+    const wrong = Object.entries(correctMap).filter(([k, v]) => !v).map(([k]) => parseInt(k));
+    wrongIndices = wrong;
+    document.getElementById('resultTitle').textContent = currentLang === 'th' ? '❌ สอบไม่ผ่าน' : '❌ Failed';
+    document.getElementById('resultSub').textContent = currentLang === 'th'
+      ? `คุณได้ ${score}/30 คะแนน ต้องการ ${passingScore} คะแนน (ผิด ${wrong.length} ข้อ)`
+      : `You scored ${score}/30, need ${passingScore}. (${wrong.length} wrong)`;
+    document.getElementById('passArea').style.display = 'none';
+    document.getElementById('failArea').style.display = '';
   }
+
+  goStep(3);
+  document.getElementById('submitQuizBtn').disabled = true;
 }
 
-function retakeQuiz() {
-  if (!wrongIndices.length) { showToast(currentLang==='th'?'ไม่มีข้อที่ผิด':'No wrong answers!'); return; }
-  isRetake = true;
-  showSection('quiz');
-  const count = wrongIndices.length;
-  document.getElementById('retake-banner').style.display = 'block';
-  document.getElementById('retake-txt').textContent =
-    currentLang==='th'
-      ? `ทำเฉพาะข้อที่ผิด (${count} ข้อ)`
-      : `Retake ${count} wrong questions`;
-  document.getElementById('btn-submit').style.display = 'inline-flex';
+// ==========================================
+// RETRY
+// ==========================================
+function retryWrongAnswers() {
+  if (!wrongIndices.length) return;
+  isRetry = true;
+  // Reset wrong answers only
+  wrongIndices.forEach(i => { delete userAnswers[i]; });
+  // Re-shuffle options for wrong questions
+  wrongIndices.forEach(i => {
+    quizQuestions[i] = shuffleOptions(quizQuestions[i]);
+  });
+
+  document.getElementById('retryBanner').style.display = '';
+  document.getElementById('retrySubtitle').textContent = currentLang === 'th'
+    ? `ต้องทำ ${wrongIndices.length} ข้อที่ผิดใหม่`
+    : `Redo ${wrongIndices.length} wrong questions`;
+
   renderQuiz();
+  goStep(2);
+  document.getElementById('submitQuizBtn').disabled = true;
 }
 
-// ================================================================
-// UTILS
-// ================================================================
-function showToast(msg, type='success') {
-  const c = document.getElementById('toastC');
-  const t = document.createElement('div');
-  t.className = 'toast-ttm';
-  t.style.borderLeft = `3px solid ${type==='error'?'#C0392B':'#28a745'}`;
-  t.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':'check-circle'}"
-    style="color:${type==='error'?'#C0392B':'#28a745'}"></i>${msg}`;
-  c.appendChild(t);
-  setTimeout(() => {
-    t.style.opacity='0'; t.style.transform='translateX(40px)';
-    t.style.transition='all .3s';
-    setTimeout(() => t.remove(), 300);
-  }, 3500);
-}
-
-function doLogout() {
-  sessionStorage.removeItem('ttm_user');
-  google.script.run
-    .withSuccessHandler(url => { window.top.location.href = url; })
-    .getWebAppUrl('index');
-}
-
-// ================================================================
-// INIT
-// ================================================================
-window.addEventListener('load', function() {
-  const saved = sessionStorage.getItem('ttm_user');
-  if (saved) {
-    try { userData = JSON.parse(saved); } catch(_) {}
+// ==========================================
+// PDF DOWNLOAD
+// ==========================================
+function downloadPDF() {
+  if (!pdfBase64) {
+    showAlert(currentLang === 'th' ? 'กำลังสร้าง PDF กรุณารอสักครู่...' : 'Generating PDF, please wait...', 'warning');
+    return;
   }
-  setLang(userData.lang || localStorage.getItem('ttm_lang') || 'th');
-});
+
+  // Decode base64 and download
+  const byteChars = atob(pdfBase64);
+  const byteNumbers = new Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) {
+    byteNumbers[i] = byteChars.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = pdfFileName || 'AnswerSheet.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showAlert(currentLang === 'th' ? 'ดาวน์โหลดสำเร็จ!' : 'Downloaded successfully!', 'success');
+}
+
+// ==========================================
+// LOGOUT
+// ==========================================
+function logout() {
+  sessionStorage.clear();
+  window.location.href = '?page=index';
+}
 </script>
 </body>
 </html>
