@@ -3,788 +3,1277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTM Admin Dashboard</title>
+<title>Admin - TTM Safety Training</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-:root {
-  --ttm-red: #C0392B; --ttm-dark-red: #922B21;
-  --ttm-gold: #D4AC0D; --ttm-bg: #0D1117;
-  --ttm-sidebar: #161B22; --ttm-card: #21262D;
-  --ttm-border: #30363D; --ttm-text: #E6EDF3;
-  --ttm-muted: #8B949E; --ttm-hover: #1C2128;
-}
-* { font-family: 'Sarabun', sans-serif; box-sizing: border-box; }
-body { background: var(--ttm-bg); color: var(--ttm-text); margin: 0; min-height: 100vh; }
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #2d5a8e;
+    --secondary: #e63946;
+    --accent: #f4a261;
+    --gold: #ffd700;
+    --success: #2a9d8f;
+    --warning: #e9c46a;
+    --bg: #0f1923;
+    --sidebar-bg: #0d1b2a;
+    --card-bg: #1a2840;
+    --card-border: rgba(255,255,255,0.08);
+    --text: #e8f4f8;
+    --text-muted: rgba(168,218,220,0.6);
+    --input-bg: rgba(255,255,255,0.06);
+  }
 
-/* Sidebar */
-.sidebar {
-  position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
-  background: var(--ttm-sidebar); border-right: 1px solid var(--ttm-border);
-  display: flex; flex-direction: column; z-index: 100;
-  transition: transform 0.3s;
-}
-.sidebar-logo {
-  padding: 20px; border-bottom: 1px solid var(--ttm-border);
-  display: flex; align-items: center; gap: 12px;
-}
-.sidebar-logo img { height: 40px; filter: brightness(1.1); }
-.sidebar-logo-text { font-size: 13px; font-weight: 700; color: var(--ttm-text); line-height: 1.3; }
-.sidebar-logo-sub { font-size: 11px; color: var(--ttm-muted); }
+  * { box-sizing: border-box; }
 
-.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
-.nav-section { padding: 8px 20px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ttm-muted); font-weight: 600; }
-.nav-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 20px; color: var(--ttm-muted); font-size: 14px; font-weight: 500;
-  cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; margin: 2px 0;
-}
-.nav-item:hover { background: var(--ttm-hover); color: var(--ttm-text); border-left-color: var(--ttm-border); }
-.nav-item.active { background: rgba(192,57,43,0.15); color: #ff6b5b; border-left-color: var(--ttm-red); }
-.nav-item i { width: 18px; text-align: center; font-size: 15px; }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
 
-.sidebar-footer {
-  padding: 16px 20px; border-top: 1px solid var(--ttm-border);
-  font-size: 13px; color: var(--ttm-muted);
-}
-.user-badge {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-}
-.user-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--ttm-red), #8B0000);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 14px; color: #fff;
-}
+  /* Sidebar */
+  .sidebar {
+    width: 260px; min-height: 100vh;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--card-border);
+    position: fixed; top: 0; left: 0; z-index: 100;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s ease;
+  }
 
-/* Main Content */
-.main-content { margin-left: 260px; min-height: 100vh; }
-.topbar {
-  background: var(--ttm-sidebar); border-bottom: 1px solid var(--ttm-border);
-  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 90;
-}
-.topbar-title { font-size: 18px; font-weight: 700; }
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-.lang-btn-sm {
-  background: rgba(255,255,255,0.06); border: 1px solid var(--ttm-border);
-  border-radius: 8px; color: var(--ttm-muted); font-size: 12px; font-weight: 600;
-  padding: 6px 12px; cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.lang-btn-sm.active { background: var(--ttm-red); border-color: var(--ttm-red); color: #fff; }
-.btn-logout {
-  background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.3);
-  border-radius: 8px; color: #ff6b5b; font-size: 13px; padding: 7px 14px;
-  cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.btn-logout:hover { background: rgba(192,57,43,0.3); }
+  .sidebar-logo {
+    padding: 20px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 12px;
+  }
 
-.content-area { padding: 24px; }
+  .sidebar-logo img { height: 40px; filter: brightness(0) invert(1); }
 
-/* Cards */
-.stat-card {
-  background: var(--ttm-card); border: 1px solid var(--ttm-border); border-radius: 12px;
-  padding: 20px; transition: all 0.3s;
-}
-.stat-card:hover { border-color: var(--ttm-red); transform: translateY(-2px); }
-.stat-number { font-size: 32px; font-weight: 800; line-height: 1; }
-.stat-label { color: var(--ttm-muted); font-size: 13px; margin-top: 6px; }
+  .sidebar-title { font-size: 0.85rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .sidebar-subtitle { font-size: 0.7rem; color: var(--text-muted); }
 
-.panel {
-  background: var(--ttm-card); border: 1px solid var(--ttm-border); border-radius: 12px;
-  overflow: hidden; margin-bottom: 24px;
-}
-.panel-header {
-  padding: 16px 20px; border-bottom: 1px solid var(--ttm-border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.panel-title { font-size: 15px; font-weight: 700; }
-.panel-body { padding: 20px; }
+  .sidebar-nav { flex: 1; padding: 16px 0; }
 
-/* Form controls dark */
-.form-control-dark, .form-select-dark {
-  background: var(--ttm-bg); border: 1px solid var(--ttm-border);
-  border-radius: 8px; color: var(--ttm-text); padding: 10px 14px; font-size: 14px;
-  width: 100%; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.form-control-dark:focus, .form-select-dark:focus {
-  outline: none; border-color: var(--ttm-red); box-shadow: 0 0 0 3px rgba(192,57,43,0.2);
-}
-.form-control-dark::placeholder { color: var(--ttm-muted); }
-.form-label-dark { color: var(--ttm-muted); font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block; }
-textarea.form-control-dark { resize: vertical; min-height: 80px; }
+  .nav-section { padding: 8px 16px 4px; font-size: 0.68rem; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-.btn-primary-ttm {
-  background: linear-gradient(135deg, var(--ttm-red), var(--ttm-dark-red));
-  border: none; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600;
-  padding: 9px 18px; cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.btn-primary-ttm:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,57,43,0.4); }
-.btn-secondary-ttm {
-  background: rgba(255,255,255,0.06); border: 1px solid var(--ttm-border);
-  border-radius: 8px; color: var(--ttm-text); font-size: 14px; font-weight: 500;
-  padding: 9px 18px; cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.btn-secondary-ttm:hover { background: rgba(255,255,255,0.12); }
-.btn-danger-ttm {
-  background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.3);
-  border-radius: 6px; color: #ff6b5b; font-size: 12px; padding: 5px 10px;
-  cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.btn-danger-ttm:hover { background: rgba(192,57,43,0.3); }
-.btn-edit-ttm {
-  background: rgba(13,110,253,0.15); border: 1px solid rgba(13,110,253,0.3);
-  border-radius: 6px; color: #6ea8fe; font-size: 12px; padding: 5px 10px;
-  cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-}
-.btn-edit-ttm:hover { background: rgba(13,110,253,0.3); }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; cursor: pointer;
+    color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+    transition: all 0.2s; border-left: 3px solid transparent;
+    text-decoration: none;
+  }
 
-/* Table */
-.table-dark-ttm { width: 100%; border-collapse: collapse; font-size: 13px; }
-.table-dark-ttm th { background: var(--ttm-bg); color: var(--ttm-muted); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--ttm-border); white-space: nowrap; }
-.table-dark-ttm td { padding: 10px 14px; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: middle; }
-.table-dark-ttm tr:hover td { background: var(--ttm-hover); }
-.table-dark-ttm tr:last-child td { border-bottom: none; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); border-left-color: var(--accent); }
+  .nav-item.active { background: rgba(244,162,97,0.1); color: var(--accent); border-left-color: var(--accent); }
+  .nav-item i { width: 18px; text-align: center; font-size: 0.95rem; }
 
-/* Answer options in Q form */
-.option-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.option-label { width: 24px; height: 24px; border-radius: 6px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--ttm-muted); flex-shrink: 0; }
-.radio-correct { accent-color: var(--ttm-gold); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+  .sidebar-footer {
+    padding: 16px; border-top: 1px solid var(--card-border);
+  }
 
-/* Badge */
-.badge-pass { background: rgba(25,135,84,0.2); color: #75b798; border: 1px solid rgba(25,135,84,0.3); border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
-.badge-fail { background: rgba(192,57,43,0.2); color: #ff6b5b; border: 1px solid rgba(192,57,43,0.3); border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
-.badge-admin { background: rgba(212,172,13,0.2); color: #f7c948; border: 1px solid rgba(212,172,13,0.3); border-radius: 6px; padding: 3px 8px; font-size: 11px; }
-.badge-user { background: rgba(13,110,253,0.15); color: #6ea8fe; border: 1px solid rgba(13,110,253,0.3); border-radius: 6px; padding: 3px 8px; font-size: 11px; }
+  .user-info {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 12px;
+    margin-bottom: 10px;
+  }
 
-/* Pages */
-.page { display: none; }
-.page.active { display: block; }
+  .user-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+  }
 
-/* Toast */
-.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-.toast-item { background: var(--ttm-card); border: 1px solid var(--ttm-border); border-radius: 10px; padding: 14px 18px; font-size: 14px; min-width: 260px; display: flex; align-items: center; gap: 10px; animation: slideInToast 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-@keyframes slideInToast { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
-.toast-success { border-left: 3px solid #28a745; }
-.toast-error { border-left: 3px solid var(--ttm-red); }
+  .user-name { font-size: 0.85rem; font-weight: 600; }
+  .user-role { font-size: 0.7rem; color: var(--accent); font-weight: 600; }
 
-/* Hamburger (mobile) */
-.hamburger { display: none; background: none; border: none; color: var(--ttm-text); font-size: 20px; cursor: pointer; }
-.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
+  .btn-logout {
+    width: 100%; background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.3);
+    color: #ff8fa3; border-radius: 10px; padding: 8px; font-size: 0.85rem;
+    cursor: pointer; font-family: 'Sarabun', sans-serif; transition: all 0.2s;
+  }
 
-@media (max-width: 900px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .sidebar-overlay.show { display: block; }
-  .main-content { margin-left: 0; }
-  .hamburger { display: block; }
-}
+  .btn-logout:hover { background: rgba(230,57,70,0.25); }
+
+  /* Main Content */
+  .main-content {
+    margin-left: 260px; min-height: 100vh;
+    padding: 24px;
+    transition: margin-left 0.3s;
+  }
+
+  /* Topbar */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+
+  .page-title { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+  .page-breadcrumb { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* Language Toggle */
+  .lang-toggle {
+    display: flex; gap: 2px;
+    background: rgba(255,255,255,0.06); border-radius: 20px; padding: 3px;
+    border: 1px solid var(--card-border);
+  }
+
+  .lang-btn {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 16px; transition: all 0.2s;
+  }
+
+  .lang-btn.active { background: var(--accent); color: white; }
+
+  /* Hamburger (Mobile) */
+  .hamburger {
+    display: none; background: none; border: 1px solid var(--card-border);
+    color: var(--text); padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  }
+
+  /* Cards */
+  .card-custom {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .card-header-custom {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+  }
+
+  .card-title-custom {
+    font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  }
+
+  .card-title-custom i { color: var(--accent); }
+
+  /* Stat Cards */
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 18px; display: flex; align-items: center; gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+
+  .stat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+  }
+
+  .stat-icon.blue { background: rgba(26,58,92,0.6); color: #74b3e8; }
+  .stat-icon.red { background: rgba(230,57,70,0.2); color: #ff8fa3; }
+  .stat-icon.orange { background: rgba(244,162,97,0.2); color: var(--accent); }
+  .stat-icon.green { background: rgba(42,157,143,0.2); color: #80ffe8; }
+
+  .stat-value { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
+
+  /* Form */
+  .form-label-custom { color: var(--text-muted); font-size: 0.83rem; font-weight: 600; margin-bottom: 6px; }
+
+  .form-control-custom {
+    width: 100%; background: var(--input-bg); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 10px 12px; color: var(--text);
+    font-family: 'Sarabun', sans-serif; font-size: 0.9rem; outline: none;
+    transition: all 0.2s;
+  }
+
+  .form-control-custom:focus { border-color: var(--accent); background: rgba(255,255,255,0.08); }
+  .form-control-custom::placeholder { color: var(--text-muted); }
+
+  select.form-control-custom option { background: var(--sidebar-bg); color: var(--text); }
+
+  /* Buttons */
+  .btn-primary-custom {
+    background: linear-gradient(135deg, var(--secondary), #c1121f);
+    border: none; border-radius: 10px; padding: 9px 20px;
+    color: white; font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(230,57,70,0.3);
+  }
+
+  .btn-primary-custom:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(230,57,70,0.4); }
+
+  .btn-success-custom {
+    background: linear-gradient(135deg, var(--success), #1d7a72);
+    border: none; border-radius: 10px; padding: 9px 20px;
+    color: white; font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+
+  .btn-success-custom:hover { transform: translateY(-1px); }
+
+  .btn-warning-custom {
+    background: linear-gradient(135deg, var(--accent), #e76f51);
+    border: none; border-radius: 8px; padding: 6px 14px;
+    color: white; font-family: 'Sarabun', sans-serif; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-danger-custom {
+    background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.3);
+    border-radius: 8px; padding: 6px 14px;
+    color: #ff8fa3; font-family: 'Sarabun', sans-serif; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-danger-custom:hover { background: rgba(230,57,70,0.25); }
+
+  .btn-sm-custom { padding: 4px 10px; font-size: 0.75rem; }
+
+  /* Table */
+  .table-custom { width: 100%; border-collapse: collapse; }
+  .table-custom th {
+    background: rgba(255,255,255,0.05); padding: 10px 12px;
+    text-align: left; font-size: 0.78rem; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .table-custom td {
+    padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.875rem; vertical-align: middle;
+  }
+
+  .table-custom tr:hover td { background: rgba(255,255,255,0.03); }
+  .table-custom tr:last-child td { border-bottom: none; }
+
+  .badge-role {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px;
+  }
+
+  .badge-admin { background: rgba(230,57,70,0.2); color: #ff8fa3; }
+  .badge-user { background: rgba(42,157,143,0.2); color: #80ffe8; }
+  .badge-active { background: rgba(42,157,143,0.2); color: #80ffe8; }
+  .badge-inactive { background: rgba(150,150,150,0.2); color: #aaa; }
+
+  /* Tab Sections */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 28px; width: 100%; max-width: 550px;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.3s ease-out;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-title {
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .modal-close {
+    background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;
+    padding: 0; transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { margin-bottom: 14px; }
+
+  /* Alert */
+  .alert-bar {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; padding: 12px 24px; border-radius: 12px;
+    font-size: 0.9rem; font-weight: 600; min-width: 280px; text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    animation: slideDown 0.3s ease-out;
+    display: none;
+  }
+
+  .alert-bar.show { display: block; }
+  .alert-bar.success { background: #1b4332; border: 1px solid #2d6a4f; color: #95d5b2; }
+  .alert-bar.error { background: #3d0000; border: 1px solid #6d0000; color: #ff8fa3; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* Q option row */
+  .q-option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .answer-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .answer-btn {
+    padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    border: 2px solid var(--card-border); background: var(--input-bg); color: var(--text-muted);
+    transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+  }
+  .answer-btn.selected { border-color: var(--success); background: rgba(42,157,143,0.2); color: #80ffe8; }
+
+  /* Password strength */
+  .pwd-strength { height: 4px; border-radius: 2px; background: var(--card-border); margin-top: 6px; }
+  .pwd-strength-bar { height: 100%; border-radius: 2px; transition: all 0.3s; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+    .hamburger { display: block; }
+    .form-row { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Alert Bar -->
+<div class="alert-bar" id="alertBar"></div>
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <img src="https://ttm-jda.com/themes/default/images/all/logo/pic_logo.png" alt="TTM" onerror="this.style.display='none'">
     <div>
-      <div class="sidebar-logo-text" id="sb-title">ระบบอบรม TTM</div>
-      <div class="sidebar-logo-sub" id="sb-role">Admin Panel</div>
+      <div class="sidebar-title" data-th="TTM Safety Training" data-en="TTM Safety Training">TTM Safety Training</div>
+      <div class="sidebar-subtitle" data-th="แผงควบคุมผู้ดูแล" data-en="Admin Dashboard">แผงควบคุมผู้ดูแล</div>
     </div>
   </div>
+
   <nav class="sidebar-nav">
-    <div class="nav-section" id="nav-sec-overview">ภาพรวม</div>
-    <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard"><i class="fas fa-chart-line"></i><span id="nav-db-txt">แดชบอร์ด</span></div>
-    <div class="nav-section" id="nav-sec-manage">จัดการ</div>
-    <div class="nav-item" onclick="showPage('questions')" id="nav-questions"><i class="fas fa-question-circle"></i><span id="nav-q-txt">จัดการข้อสอบ</span></div>
-    <div class="nav-item" onclick="showPage('videos')" id="nav-videos"><i class="fab fa-youtube"></i><span id="nav-v-txt">จัดการวิดีโอ</span></div>
-    <div class="nav-item" onclick="showPage('users')" id="nav-users"><i class="fas fa-users"></i><span id="nav-u-txt">จัดการผู้ใช้</span></div>
-    <div class="nav-item" onclick="showPage('settings')" id="nav-settings"><i class="fas fa-cog"></i><span id="nav-s-txt">ตั้งค่าระบบ</span></div>
-    <div class="nav-section" id="nav-sec-report">รายงาน</div>
-    <div class="nav-item" onclick="showPage('results')" id="nav-results"><i class="fas fa-clipboard-list"></i><span id="nav-r-txt">ผลสอบ</span></div>
+    <div class="nav-section" data-th="หน้าหลัก" data-en="MAIN">หน้าหลัก</div>
+    <div class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard">
+      <i class="fa fa-gauge-high"></i>
+      <span data-th="แดชบอร์ด" data-en="Dashboard">แดชบอร์ด</span>
+    </div>
+
+    <div class="nav-section" data-th="การจัดการ" data-en="MANAGEMENT">การจัดการ</div>
+    <div class="nav-item" onclick="showSection('questions')" data-section="questions">
+      <i class="fa fa-question-circle"></i>
+      <span data-th="จัดการข้อสอบ" data-en="Questions">จัดการข้อสอบ</span>
+    </div>
+    <div class="nav-item" onclick="showSection('videos')" data-section="videos">
+      <i class="fa fa-video"></i>
+      <span data-th="จัดการวิดีโอ" data-en="Videos">จัดการวิดีโอ</span>
+    </div>
+    <div class="nav-item" onclick="showSection('users')" data-section="users">
+      <i class="fa fa-users"></i>
+      <span data-th="จัดการผู้ใช้" data-en="Users">จัดการผู้ใช้</span>
+    </div>
+    <div class="nav-item" onclick="showSection('settings')" data-section="settings">
+      <i class="fa fa-sliders"></i>
+      <span data-th="ตั้งค่าระบบ" data-en="Settings">ตั้งค่าระบบ</span>
+    </div>
   </nav>
+
   <div class="sidebar-footer">
-    <div class="user-badge">
-      <div class="user-avatar" id="adminAvatar">A</div>
+    <div class="user-info">
+      <div class="user-avatar" id="avatarInitial">A</div>
       <div>
-        <div style="font-weight:600;font-size:13px;" id="adminName">Admin</div>
-        <div style="font-size:11px;color:var(--ttm-muted);" id="adminRole">ผู้ดูแลระบบ</div>
+        <div class="user-name" id="sidebarUserName">Admin</div>
+        <div class="user-role" data-th="ผู้ดูแลระบบ" data-en="Administrator">ผู้ดูแลระบบ</div>
       </div>
     </div>
+    <button class="btn-logout" onclick="logout()">
+      <i class="fa fa-right-from-bracket me-2"></i>
+      <span data-th="ออกจากระบบ" data-en="Logout">ออกจากระบบ</span>
+    </button>
   </div>
 </div>
 
-<!-- Main -->
-<div class="main-content">
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+
+  <!-- Topbar -->
   <div class="topbar">
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
-      <span class="topbar-title" id="pageTitle">แดชบอร์ด</span>
-    </div>
-    <div class="topbar-right">
-      <button class="lang-btn-sm active" onclick="setLang('th')" id="btnTH">🇹🇭 TH</button>
-      <button class="lang-btn-sm" onclick="setLang('en')" id="btnEN">🇺🇸 EN</button>
-      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt me-1"></i><span id="logoutTxt">ออกจากระบบ</span></button>
-    </div>
-  </div>
-
-  <div class="content-area">
-
-    <!-- ======= DASHBOARD PAGE ======= -->
-    <div class="page active" id="page-dashboard">
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-number text-danger" id="stat-q">—</div>
-            <div class="stat-label" id="stat-q-lbl">ข้อสอบทั้งหมด</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-number" style="color:var(--ttm-gold)" id="stat-u">—</div>
-            <div class="stat-label" id="stat-u-lbl">ผู้ใช้งาน</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-number" style="color:#58a6ff" id="stat-v">—</div>
-            <div class="stat-label" id="stat-v-lbl">วิดีโอ</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
-          <div class="stat-card">
-            <div class="stat-number" style="color:#3fb950" id="stat-r">—</div>
-            <div class="stat-label" id="stat-r-lbl">ผู้สอบทั้งหมด</div>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title" id="recent-title">ผลสอบล่าสุด</span></div>
-        <div class="panel-body" style="overflow-x:auto;">
-          <table class="table-dark-ttm" id="recentTable">
-            <thead><tr>
-              <th id="th-date">วันที่</th><th id="th-name">ชื่อ</th>
-              <th id="th-company">บริษัท</th><th id="th-score">คะแนน</th><th id="th-result">ผล</th>
-            </tr></thead>
-            <tbody id="recentBody"><tr><td colspan="5" style="text-align:center;color:var(--ttm-muted);padding:24px">กำลังโหลด...</td></tr></tbody>
-          </table>
-        </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="hamburger" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+      <div>
+        <div class="page-title" id="pageTitle" data-th="แดชบอร์ด" data-en="Dashboard">แดชบอร์ด</div>
+        <div class="page-breadcrumb">TTM Safety Training &rsaquo; <span id="breadcrumb" data-th="แดชบอร์ด" data-en="Dashboard">แดชบอร์ด</span></div>
       </div>
     </div>
-
-    <!-- ======= QUESTIONS PAGE ======= -->
-    <div class="page" id="page-questions">
-      <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title" id="q-panel-title">จัดการข้อสอบ</span>
-          <button class="btn-primary-ttm" onclick="openQModal()"><i class="fas fa-plus me-1"></i><span id="add-q-btn">เพิ่มข้อสอบ</span></button>
-        </div>
-        <div class="panel-body" style="overflow-x:auto;">
-          <table class="table-dark-ttm" id="qTable">
-            <thead><tr>
-              <th>#</th><th id="th-q-th">คำถาม (TH)</th><th id="th-q-en">คำถาม (EN)</th>
-              <th id="th-q-ans">ตอบที่ถูก</th><th id="th-q-act">จัดการ</th>
-            </tr></thead>
-            <tbody id="qBody"><tr><td colspan="5" style="text-align:center;color:var(--ttm-muted);padding:24px">กำลังโหลด...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= VIDEOS PAGE ======= -->
-    <div class="page" id="page-videos">
-      <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title" id="v-panel-title">จัดการวิดีโอ</span>
-          <button class="btn-primary-ttm" onclick="openVModal()"><i class="fas fa-plus me-1"></i><span id="add-v-btn">เพิ่มวิดีโอ</span></button>
-        </div>
-        <div class="panel-body" id="videoCards">กำลังโหลด...</div>
-      </div>
-    </div>
-
-    <!-- ======= USERS PAGE ======= -->
-    <div class="page" id="page-users">
-      <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title" id="u-panel-title">จัดการผู้ใช้</span>
-          <button class="btn-primary-ttm" onclick="openUModal()"><i class="fas fa-user-plus me-1"></i><span id="add-u-btn">เพิ่มผู้ใช้</span></button>
-        </div>
-        <div class="panel-body" style="overflow-x:auto;">
-          <table class="table-dark-ttm" id="uTable">
-            <thead><tr>
-              <th id="th-u-user">ชื่อผู้ใช้</th><th id="th-u-pass">รหัสผ่าน</th>
-              <th id="th-u-role">สิทธิ์</th><th id="th-u-status">สถานะ</th><th id="th-u-act">จัดการ</th>
-            </tr></thead>
-            <tbody id="uBody"><tr><td colspan="5" style="text-align:center;color:var(--ttm-muted);padding:24px">กำลังโหลด...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= SETTINGS PAGE ======= -->
-    <div class="page" id="page-settings">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title" id="ps-title">กำหนดเกณฑ์ผ่าน</span></div>
-            <div class="panel-body">
-              <label class="form-label-dark" id="ps-label">คะแนนขั้นต่ำที่ผ่าน (จาก 30 ข้อ)</label>
-              <input type="number" class="form-control-dark" id="passingScore" min="1" max="30" value="27">
-              <div style="color:var(--ttm-muted);font-size:12px;margin-top:6px;" id="ps-note">เช่น 27 หมายถึงต้องทำถูกอย่างน้อย 27 จาก 30 ข้อ</div>
-              <button class="btn-primary-ttm mt-3" onclick="savePassingScore()"><i class="fas fa-save me-1"></i><span id="ps-save">บันทึก</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= RESULTS PAGE ======= -->
-    <div class="page" id="page-results">
-      <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title" id="res-title">ผลสอบทั้งหมด</span>
-          <button class="btn-secondary-ttm" onclick="loadResults()"><i class="fas fa-sync-alt me-1"></i><span id="res-refresh">รีเฟรช</span></button>
-        </div>
-        <div class="panel-body" style="overflow-x:auto;">
-          <table class="table-dark-ttm" id="resTable">
-            <thead><tr>
-              <th id="rth-date">วันที่</th><th id="rth-user">ผู้ใช้</th><th id="rth-name">ชื่อ</th>
-              <th id="rth-company">บริษัท</th><th id="rth-score">คะแนน</th><th id="rth-res">ผล</th>
-            </tr></thead>
-            <tbody id="resBody"><tr><td colspan="6" style="text-align:center;color:var(--ttm-muted);padding:24px">กำลังโหลด...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- content-area -->
-</div><!-- main-content -->
-
-<!-- TOAST -->
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- ===== QUESTION MODAL ===== -->
-<div class="modal fade" id="qModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content" style="background:var(--ttm-card);border:1px solid var(--ttm-border);border-radius:16px;color:var(--ttm-text);">
-      <div class="modal-header" style="border-color:var(--ttm-border);">
-        <h5 class="modal-title" id="qModalTitle">เพิ่มข้อสอบ</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="qRowIndex">
-        <div class="row g-3 mb-3">
-          <div class="col-md-6">
-            <label class="form-label-dark" id="lbl-qth">คำถาม (ภาษาไทย) *</label>
-            <textarea class="form-control-dark" id="qTH" placeholder="พิมพ์คำถามภาษาไทย..."></textarea>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label-dark" id="lbl-qen">คำถาม (ภาษาอังกฤษ) *</label>
-            <textarea class="form-control-dark" id="qEN" placeholder="Type question in English..."></textarea>
-          </div>
-        </div>
-        <div style="font-size:13px;font-weight:600;color:var(--ttm-muted);margin-bottom:12px;" id="lbl-opts">ตัวเลือก (เลือก ✓ ข้อที่ถูกต้อง)</div>
-        <div id="optRows"></div>
-      </div>
-      <div class="modal-footer" style="border-color:var(--ttm-border);">
-        <button class="btn-secondary-ttm" data-bs-dismiss="modal" id="q-cancel">ยกเลิก</button>
-        <button class="btn-primary-ttm" onclick="saveQuestion()" id="q-save"><i class="fas fa-save me-1"></i>บันทึก</button>
+    <div class="topbar-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('th')" id="langTH">TH</button>
+        <button class="lang-btn" onclick="setLang('en')" id="langEN">EN</button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ===== VIDEO MODAL ===== -->
-<div class="modal fade" id="vModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background:var(--ttm-card);border:1px solid var(--ttm-border);border-radius:16px;color:var(--ttm-text);">
-      <div class="modal-header" style="border-color:var(--ttm-border);">
-        <h5 class="modal-title" id="vModalTitle">เพิ่มวิดีโอ</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="vRowIndex">
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-vtitle">ชื่อวิดีโอ</label>
-          <input type="text" class="form-control-dark" id="vTitle" placeholder="ชื่อวิดีโอ">
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-vurl">YouTube Embed URL</label>
-          <input type="text" class="form-control-dark" id="vUrl" placeholder="https://www.youtube.com/embed/XXXXXXX">
-          <div style="font-size:12px;color:var(--ttm-muted);margin-top:4px;" id="lbl-vurl-note">ใช้ URL แบบ embed เช่น https://www.youtube.com/embed/VIDEO_ID</div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-vorder">ลำดับ</label>
-          <input type="number" class="form-control-dark" id="vOrder" value="1" min="1">
+  <!-- ======== DASHBOARD ======== -->
+  <div class="section active" id="section-dashboard">
+    <div class="stat-grid" id="statGrid">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fa fa-users"></i></div>
+        <div>
+          <div class="stat-value" id="statUsers">-</div>
+          <div class="stat-label" data-th="ผู้ใช้งาน" data-en="Users">ผู้ใช้งาน</div>
         </div>
       </div>
-      <div class="modal-footer" style="border-color:var(--ttm-border);">
-        <button class="btn-secondary-ttm" data-bs-dismiss="modal" id="v-cancel">ยกเลิก</button>
-        <button class="btn-primary-ttm" onclick="saveVideo()" id="v-save"><i class="fas fa-save me-1"></i>บันทึก</button>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fa fa-question-circle"></i></div>
+        <div>
+          <div class="stat-value" id="statQuestions">-</div>
+          <div class="stat-label" data-th="ข้อสอบ" data-en="Questions">ข้อสอบ</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fa fa-video"></i></div>
+        <div>
+          <div class="stat-value" id="statVideos">-</div>
+          <div class="stat-label" data-th="วิดีโอ" data-en="Videos">วิดีโอ</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fa fa-chart-line"></i></div>
+        <div>
+          <div class="stat-value" id="statPassing">-/30</div>
+          <div class="stat-label" data-th="เกณฑ์ผ่าน" data-en="Passing Score">เกณฑ์ผ่าน</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-title-custom"><i class="fa fa-gauge-high"></i> <span data-th="ภาพรวมระบบ" data-en="System Overview">ภาพรวมระบบ</span></div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.9rem;" data-th="ยินดีต้อนรับสู่ระบบจัดการ TTM Safety Training กรุณาใช้เมนูด้านซ้ายเพื่อจัดการระบบ" data-en="Welcome to TTM Safety Training Management. Use the menu on the left to manage the system.">
+        ยินดีต้อนรับสู่ระบบจัดการ TTM Safety Training กรุณาใช้เมนูด้านซ้ายเพื่อจัดการระบบ
+      </p>
+    </div>
+  </div>
+
+  <!-- ======== QUESTIONS ======== -->
+  <div class="section" id="section-questions">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-title-custom"><i class="fa fa-question-circle"></i> <span data-th="จัดการข้อสอบ" data-en="Manage Questions">จัดการข้อสอบ</span></div>
+        <button class="btn-primary-custom" onclick="openQModal()">
+          <i class="fa fa-plus me-1"></i>
+          <span data-th="เพิ่มข้อสอบ" data-en="Add Question">เพิ่มข้อสอบ</span>
+        </button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-th="คำถาม (ไทย)" data-en="Question (TH)">คำถาม (ไทย)</th>
+              <th data-th="คำถาม (อังกฤษ)" data-en="Question (EN)">คำถาม (อังกฤษ)</th>
+              <th data-th="เฉลย" data-en="Answer">เฉลย</th>
+              <th data-th="จัดการ" data-en="Action">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="questionsTableBody">
+            <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:30px;">
+              <i class="fa fa-spinner fa-spin me-2"></i>
+              <span data-th="กำลังโหลด..." data-en="Loading...">กำลังโหลด...</span>
+            </td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ===== USER MODAL ===== -->
-<div class="modal fade" id="uModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background:var(--ttm-card);border:1px solid var(--ttm-border);border-radius:16px;color:var(--ttm-text);">
-      <div class="modal-header" style="border-color:var(--ttm-border);">
-        <h5 class="modal-title" id="uModalTitle">เพิ่มผู้ใช้</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+  <!-- ======== VIDEOS ======== -->
+  <div class="section" id="section-videos">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-title-custom"><i class="fa fa-video"></i> <span data-th="จัดการวิดีโออบรม" data-en="Training Videos">จัดการวิดีโออบรม</span></div>
+        <button class="btn-primary-custom" onclick="openVideoModal()">
+          <i class="fa fa-plus me-1"></i>
+          <span data-th="เพิ่มวิดีโอ" data-en="Add Video">เพิ่มวิดีโอ</span>
+        </button>
       </div>
-      <div class="modal-body">
-        <input type="hidden" id="uRowIndex">
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-uname">ชื่อแสดง</label>
-          <input type="text" class="form-control-dark" id="uDisplayName" placeholder="ชื่อแสดงผล">
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-uuser">ชื่อผู้ใช้ (Username)</label>
-          <input type="text" class="form-control-dark" id="uUsername" placeholder="username">
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-upass">รหัสผ่าน</label>
-          <div style="display:flex;gap:8px;">
-            <input type="text" class="form-control-dark" id="uPassword" placeholder="รหัสผ่าน" style="flex:1">
-            <button class="btn-secondary-ttm" onclick="genPassword()" id="btn-gen" style="white-space:nowrap;"><i class="fas fa-random me-1"></i>สุ่ม</button>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-urole">สิทธิ์</label>
-          <select class="form-control-dark form-select-dark" id="uRole">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label-dark" id="lbl-ustatus">สถานะ</label>
-          <select class="form-control-dark form-select-dark" id="uStatus">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
+      <div id="videosList">
+        <div style="text-align:center; color:var(--text-muted); padding:30px;">
+          <i class="fa fa-spinner fa-spin me-2"></i>กำลังโหลด...
         </div>
       </div>
-      <div class="modal-footer" style="border-color:var(--ttm-border);">
-        <button class="btn-secondary-ttm" data-bs-dismiss="modal" id="u-cancel">ยกเลิก</button>
-        <button class="btn-primary-ttm" onclick="saveUser()" id="u-save"><i class="fas fa-save me-1"></i>บันทึก</button>
+    </div>
+  </div>
+
+  <!-- ======== USERS ======== -->
+  <div class="section" id="section-users">
+    <div class="card-custom">
+      <div class="card-header-custom">
+        <div class="card-title-custom"><i class="fa fa-users"></i> <span data-th="จัดการผู้ใช้งาน" data-en="User Management">จัดการผู้ใช้งาน</span></div>
+        <button class="btn-primary-custom" onclick="openUserModal()">
+          <i class="fa fa-user-plus me-1"></i>
+          <span data-th="เพิ่มผู้ใช้" data-en="Add User">เพิ่มผู้ใช้</span>
+        </button>
       </div>
+      <div style="overflow-x:auto;">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-th="ชื่อผู้ใช้" data-en="Username">ชื่อผู้ใช้</th>
+              <th data-th="ชื่อแสดง" data-en="Display Name">ชื่อแสดง</th>
+              <th data-th="สิทธิ์" data-en="Role">สิทธิ์</th>
+              <th data-th="สถานะ" data-en="Status">สถานะ</th>
+              <th data-th="จัดการ" data-en="Action">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">
+              <i class="fa fa-spinner fa-spin me-2"></i>กำลังโหลด...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== SETTINGS ======== -->
+  <div class="section" id="section-settings">
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+
+      <div class="card-custom">
+        <div class="card-title-custom mb-3"><i class="fa fa-sliders"></i> <span data-th="เกณฑ์คะแนนผ่าน" data-en="Passing Score">เกณฑ์คะแนนผ่าน</span></div>
+        <div class="form-group">
+          <label class="form-label-custom" data-th="คะแนนขั้นต่ำ (จาก 30)" data-en="Minimum Score (out of 30)">คะแนนขั้นต่ำ (จาก 30)</label>
+          <input type="number" id="passingScore" class="form-control-custom" min="1" max="30" value="27" style="max-width:120px">
+        </div>
+        <button class="btn-success-custom" onclick="savePassingScore()">
+          <i class="fa fa-save me-1"></i>
+          <span data-th="บันทึก" data-en="Save">บันทึก</span>
+        </button>
+      </div>
+
+      <div class="card-custom">
+        <div class="card-title-custom mb-3"><i class="fa fa-circle-info"></i> <span data-th="ข้อมูลระบบ" data-en="System Info">ข้อมูลระบบ</span></div>
+        <div style="color:var(--text-muted); font-size:0.875rem; line-height:2;">
+          <div><i class="fa fa-code-branch me-2" style="color:var(--accent)"></i> Version 1.0.0</div>
+          <div><i class="fa fa-database me-2" style="color:var(--accent)"></i> Google Sheets Backend</div>
+          <div><i class="fa fa-file-pdf me-2" style="color:var(--accent)"></i> Google Slides PDF</div>
+          <div><i class="fa fa-cloud me-2" style="color:var(--accent)"></i> Google Drive Storage</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Question Modal -->
+<div class="modal-overlay" id="qModal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-title">
+      <span id="qModalTitle" data-th="เพิ่มข้อสอบ" data-en="Add Question">เพิ่มข้อสอบ</span>
+      <button class="modal-close" onclick="closeModal('qModal')"><i class="fa fa-times"></i></button>
+    </div>
+
+    <input type="hidden" id="qEditRow">
+
+    <div class="form-group">
+      <label class="form-label-custom" data-th="คำถาม (ภาษาไทย) *" data-en="Question (Thai) *">คำถาม (ภาษาไทย) *</label>
+      <textarea id="qTH" class="form-control-custom" rows="2" style="resize:vertical" placeholder="กรอกคำถามภาษาไทย..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label-custom" data-th="คำถาม (ภาษาอังกฤษ) *" data-en="Question (English) *">คำถาม (ภาษาอังกฤษ) *</label>
+      <textarea id="qEN" class="form-control-custom" rows="2" style="resize:vertical" placeholder="Enter question in English..."></textarea>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
+      <i class="fa fa-list me-1"></i>
+      <span data-th="ตัวเลือก (ก–ง / A–D)" data-en="Options (A–D)">ตัวเลือก (ก–ง / A–D)</span>
+    </div>
+
+    <div id="optionsContainer">
+      <!-- Opt 1 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.78rem; color:var(--accent); margin-bottom:4px; font-weight:600;">ก / A</div>
+        <div class="q-option-row">
+          <input type="text" id="opt1TH" class="form-control-custom" placeholder="ตัวเลือก ก (ไทย)">
+          <input type="text" id="opt1EN" class="form-control-custom" placeholder="Option A (English)">
+        </div>
+      </div>
+      <!-- Opt 2 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.78rem; color:var(--accent); margin-bottom:4px; font-weight:600;">ข / B</div>
+        <div class="q-option-row">
+          <input type="text" id="opt2TH" class="form-control-custom" placeholder="ตัวเลือก ข (ไทย)">
+          <input type="text" id="opt2EN" class="form-control-custom" placeholder="Option B (English)">
+        </div>
+      </div>
+      <!-- Opt 3 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.78rem; color:var(--accent); margin-bottom:4px; font-weight:600;">ค / C</div>
+        <div class="q-option-row">
+          <input type="text" id="opt3TH" class="form-control-custom" placeholder="ตัวเลือก ค (ไทย)">
+          <input type="text" id="opt3EN" class="form-control-custom" placeholder="Option C (English)">
+        </div>
+      </div>
+      <!-- Opt 4 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.78rem; color:var(--accent); margin-bottom:4px; font-weight:600;">ง / D</div>
+        <div class="q-option-row">
+          <input type="text" id="opt4TH" class="form-control-custom" placeholder="ตัวเลือก ง (ไทย)">
+          <input type="text" id="opt4EN" class="form-control-custom" placeholder="Option D (English)">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label-custom" data-th="เฉลยข้อที่ถูก *" data-en="Correct Answer *">เฉลยข้อที่ถูก *</label>
+      <div class="answer-selector">
+        <button class="answer-btn" onclick="selectAnswer(1)" id="ansBtn1">ก / A</button>
+        <button class="answer-btn" onclick="selectAnswer(2)" id="ansBtn2">ข / B</button>
+        <button class="answer-btn" onclick="selectAnswer(3)" id="ansBtn3">ค / C</button>
+        <button class="answer-btn" onclick="selectAnswer(4)" id="ansBtn4">ง / D</button>
+      </div>
+      <input type="hidden" id="qAnswer">
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+      <button class="btn-danger-custom" onclick="closeModal('qModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
+      <button class="btn-success-custom" onclick="saveQuestion()">
+        <i class="fa fa-save me-1"></i>
+        <span data-th="บันทึก" data-en="Save">บันทึก</span>
+      </button>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<!-- Video Modal -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span id="videoModalTitle" data-th="เพิ่มวิดีโอ" data-en="Add Video">เพิ่มวิดีโอ</span>
+      <button class="modal-close" onclick="closeModal('videoModal')"><i class="fa fa-times"></i></button>
+    </div>
+    <input type="hidden" id="videoEditRow">
+    <div class="form-group">
+      <label class="form-label-custom" data-th="ชื่อวิดีโอ *" data-en="Video Title *">ชื่อวิดีโอ *</label>
+      <input type="text" id="videoTitle" class="form-control-custom" placeholder="ชื่อวิดีโอการอบรม...">
+    </div>
+    <div class="form-group">
+      <label class="form-label-custom">YouTube Embed URL *</label>
+      <input type="text" id="videoUrl" class="form-control-custom" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+        <i class="fa fa-info-circle me-1" style="color:var(--accent)"></i>
+        <span data-th="ใช้ URL รูปแบบ: https://www.youtube.com/embed/VIDEO_ID" data-en="Use URL format: https://www.youtube.com/embed/VIDEO_ID">ใช้ URL รูปแบบ: https://www.youtube.com/embed/VIDEO_ID</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-muted); font-size:0.875rem;">
+        <input type="checkbox" id="videoActive" checked style="accent-color: var(--success); width:16px; height:16px;">
+        <span data-th="เปิดใช้งาน" data-en="Active">เปิดใช้งาน</span>
+      </label>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+      <button class="btn-danger-custom" onclick="closeModal('videoModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
+      <button class="btn-success-custom" onclick="saveVideo()">
+        <i class="fa fa-save me-1"></i>
+        <span data-th="บันทึก" data-en="Save">บันทึก</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span id="userModalTitle" data-th="เพิ่มผู้ใช้" data-en="Add User">เพิ่มผู้ใช้</span>
+      <button class="modal-close" onclick="closeModal('userModal')"><i class="fa fa-times"></i></button>
+    </div>
+    <input type="hidden" id="userEditRow">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label-custom" data-th="ชื่อผู้ใช้ (Username) *" data-en="Username *">ชื่อผู้ใช้ (Username) *</label>
+        <input type="text" id="userUsername" class="form-control-custom" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label-custom" data-th="ชื่อแสดง" data-en="Display Name">ชื่อแสดง</label>
+        <input type="text" id="userDisplay" class="form-control-custom" placeholder="ชื่อ-นามสกุล">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label-custom" data-th="รหัสผ่าน *" data-en="Password *">รหัสผ่าน *</label>
+      <div style="display:flex; gap:8px;">
+        <div style="position:relative; flex:1;">
+          <input type="text" id="userPassword" class="form-control-custom" placeholder="รหัสผ่าน" oninput="checkPwdStrength(this.value)">
+        </div>
+        <button class="btn-warning-custom" onclick="genPassword()" style="white-space:nowrap;">
+          <i class="fa fa-shuffle me-1"></i>
+          <span data-th="สุ่มรหัส" data-en="Random">สุ่มรหัส</span>
+        </button>
+      </div>
+      <div class="pwd-strength" style="margin-top:6px;"><div class="pwd-strength-bar" id="pwdBar" style="width:0%; background:#e63946;"></div></div>
+      <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px;" id="pwdStrengthLabel"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label-custom" data-th="สิทธิ์" data-en="Role">สิทธิ์</label>
+        <select id="userRole" class="form-control-custom">
+          <option value="user" data-th="ผู้ใช้ทั่วไป" data-en="User">ผู้ใช้ทั่วไป</option>
+          <option value="admin" data-th="ผู้ดูแลระบบ" data-en="Admin">ผู้ดูแลระบบ</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label-custom" data-th="สถานะ" data-en="Status">สถานะ</label>
+        <select id="userActive" class="form-control-custom">
+          <option value="true" data-th="ใช้งาน" data-en="Active">ใช้งาน</option>
+          <option value="false" data-th="ระงับ" data-en="Inactive">ระงับ</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+      <button class="btn-danger-custom" onclick="closeModal('userModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
+      <button class="btn-success-custom" onclick="saveUser()">
+        <i class="fa fa-save me-1"></i>
+        <span data-th="บันทึก" data-en="Save">บันทึก</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:380px; text-align:center;">
+    <div style="font-size:3rem; color:#e63946; margin-bottom:12px;"><i class="fa fa-triangle-exclamation"></i></div>
+    <div style="font-size:1.1rem; font-weight:700; margin-bottom:8px;" data-th="ยืนยันการลบ?" data-en="Confirm Delete?">ยืนยันการลบ?</div>
+    <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:20px;" id="confirmMsg" data-th="ข้อมูลจะถูกลบถาวรและไม่สามารถกู้คืนได้" data-en="This will permanently delete the data.">ข้อมูลจะถูกลบถาวรและไม่สามารถกู้คืนได้</p>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button class="btn-danger-custom" onclick="closeModal('confirmModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
+      <button class="btn-primary-custom" id="confirmOkBtn" data-th="ลบเลย" data-en="Delete">ลบเลย</button>
+    </div>
+  </div>
+</div>
+
 <script>
-let currentLang = 'th';
-let allQuestions = [], allUsers = [], allVideos = [];
-let userData = {};
+// ==========================================
+// SESSION CHECK
+// ==========================================
+const sessionData = JSON.parse(sessionStorage.getItem('ttm_user') || '{}');
+if (!sessionData || sessionData.role !== 'admin') {
+  window.location.href = '?page=index';
+}
 
-// ---- i18n ----
-const i18n = {
-  th: {
-    pageTitle: { dashboard:'แดชบอร์ด', questions:'จัดการข้อสอบ', videos:'จัดการวิดีโอ', users:'จัดการผู้ใช้', settings:'ตั้งค่า', results:'ผลสอบ' },
-    logoutTxt:'ออกจากระบบ', 'nav-sec-overview':'ภาพรวม', 'nav-sec-manage':'จัดการ', 'nav-sec-report':'รายงาน',
-    'stat-q-lbl':'ข้อสอบทั้งหมด', 'stat-u-lbl':'ผู้ใช้งาน', 'stat-v-lbl':'วิดีโอ', 'stat-r-lbl':'ผู้สอบทั้งหมด',
-    'recent-title':'ผลสอบล่าสุด', PASS:'ผ่าน', FAIL:'ไม่ผ่าน', adminRole:'ผู้ดูแลระบบ',
-  },
-  en: {
-    pageTitle: { dashboard:'Dashboard', questions:'Questions', videos:'Videos', users:'Users', settings:'Settings', results:'Results' },
-    logoutTxt:'Logout', 'nav-sec-overview':'OVERVIEW', 'nav-sec-manage':'MANAGE', 'nav-sec-report':'REPORTS',
-    'stat-q-lbl':'Total Questions', 'stat-u-lbl':'Users', 'stat-v-lbl':'Videos', 'stat-r-lbl':'Total Exams',
-    'recent-title':'Recent Results', PASS:'PASS', FAIL:'FAIL', adminRole:'System Administrator',
-  }
-};
+let currentLang = sessionStorage.getItem('ttm_lang') || localStorage.getItem('ttm_lang') || 'th';
+document.getElementById('sidebarUserName').textContent = sessionData.displayName || 'Admin';
+document.getElementById('avatarInitial').textContent = (sessionData.displayName || 'A')[0].toUpperCase();
 
+// ==========================================
+// LANGUAGE
+// ==========================================
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('ttm_lang', lang);
-  document.getElementById('btnTH').classList.toggle('active', lang==='th');
-  document.getElementById('btnEN').classList.toggle('active', lang==='en');
-  document.getElementById('adminRole').textContent = i18n[lang].adminRole;
-  document.getElementById('logoutTxt').textContent = i18n[lang].logoutTxt;
-  ['nav-sec-overview','nav-sec-manage','nav-sec-report','stat-q-lbl','stat-u-lbl','stat-v-lbl','stat-r-lbl','recent-title'].forEach(id => {
-    if(document.getElementById(id)) document.getElementById(id).textContent = i18n[lang][id];
+  sessionStorage.setItem('ttm_lang', lang);
+  document.querySelectorAll('[data-th]').forEach(el => {
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = lang === 'th' ? el.dataset.th : el.dataset.en;
+    } else {
+      el.textContent = lang === 'th' ? el.dataset.th : el.dataset.en;
+    }
   });
-  renderAll();
+  document.querySelectorAll('option[data-th]').forEach(opt => {
+    opt.textContent = lang === 'th' ? opt.dataset.th : opt.dataset.en;
+  });
+  document.getElementById('langTH').classList.toggle('active', lang === 'th');
+  document.getElementById('langEN').classList.toggle('active', lang === 'en');
 }
 
-// ---- Routing ----
-let currentPage = 'dashboard';
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+setLang(currentLang);
+
+// ==========================================
+// SIDEBAR
+// ==========================================
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ==========================================
+// SECTION NAVIGATION
+// ==========================================
+const sectionMeta = {
+  dashboard: { th: 'แดชบอร์ด', en: 'Dashboard' },
+  questions: { th: 'จัดการข้อสอบ', en: 'Questions' },
+  videos: { th: 'จัดการวิดีโอ', en: 'Videos' },
+  users: { th: 'จัดการผู้ใช้งาน', en: 'User Management' },
+  settings: { th: 'ตั้งค่าระบบ', en: 'Settings' }
+};
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.getElementById('nav-'+page).classList.add('active');
-  document.getElementById('pageTitle').textContent = i18n[currentLang].pageTitle[page];
-  currentPage = page;
-  closeSidebar();
-  if (page==='questions') loadQuestions();
-  if (page==='videos') loadVideos();
-  if (page==='users') loadUsers();
-  if (page==='results') loadResults();
-  if (page==='settings') loadSettings();
+  document.querySelector(`.nav-item[data-section="${name}"]`).classList.add('active');
+
+  const meta = sectionMeta[name];
+  document.getElementById('pageTitle').textContent = currentLang === 'th' ? meta.th : meta.en;
+  document.getElementById('breadcrumb').textContent = currentLang === 'th' ? meta.th : meta.en;
+
+  // Lazy load
+  if (name === 'questions') loadQuestions();
+  if (name === 'videos') loadVideos();
+  if (name === 'users') loadUsers();
+  if (name === 'settings') loadSettings();
+  if (name === 'dashboard') loadDashboard();
 }
 
-// ---- Mobile Sidebar ----
-function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-
-// ---- Toast ----
-function showToast(msg, type='success') {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast-item toast-${type}`;
-  t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}" style="color:${type==='success'?'#3fb950':'#ff6b5b'}"></i>${msg}`;
-  c.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(40px)'; t.style.transition='all 0.3s'; setTimeout(()=>t.remove(),300); }, 3000);
+// ==========================================
+// ALERT
+// ==========================================
+function showAlert(msg, type) {
+  const bar = document.getElementById('alertBar');
+  bar.textContent = msg;
+  bar.className = `alert-bar show ${type}`;
+  setTimeout(() => { bar.className = 'alert-bar'; }, 3500);
 }
 
-// ---- Logout ----
-function doLogout() {
-  sessionStorage.removeItem('ttm_user');
-  google.script.run.withSuccessHandler(url=>{ window.top.location.href=url; }).getScriptUrl('index');
+// ==========================================
+// MODAL
+// ==========================================
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close on outside click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) closeModal(this.id);
+  });
+});
+
+// ==========================================
+// DASHBOARD
+// ==========================================
+function loadDashboard() {
+  google.script.run
+    .withSuccessHandler(r => { if (r.success) document.getElementById('statUsers').textContent = r.data.length; })
+    .getUsers();
+  google.script.run
+    .withSuccessHandler(r => { if (r.success) document.getElementById('statQuestions').textContent = r.data.length; })
+    .getQuestions();
+  google.script.run
+    .withSuccessHandler(r => { if (r.success) document.getElementById('statVideos').textContent = r.data.length; })
+    .getVideos();
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success) document.getElementById('statPassing').textContent = (r.data.passing_score || 27) + '/30';
+    })
+    .getSettings();
 }
 
-// ---- QUESTIONS ----
+loadDashboard();
+
+// ==========================================
+// QUESTIONS
+// ==========================================
+let questions = [];
+
 function loadQuestions() {
-  google.script.run.withSuccessHandler(function(qs) {
-    allQuestions = qs;
-    document.getElementById('stat-q').textContent = qs.length;
-    renderQuestions();
-  }).getQuestions();
+  const tbody = document.getElementById('questionsTableBody');
+  tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:30px;"><i class="fa fa-spinner fa-spin me-2"></i>กำลังโหลด...</td></tr>`;
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      questions = r.success ? r.data : [];
+      renderQuestionsTable();
+    })
+    .withFailureHandler(err => { tbody.innerHTML = `<tr><td colspan="5" style="color:#ff8fa3;padding:20px;text-align:center;">Error: ${err.message}</td></tr>`; })
+    .getQuestions();
 }
 
-function renderQuestions() {
-  const tbody = document.getElementById('qBody');
-  if (!allQuestions.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--ttm-muted);padding:24px">${currentLang==='th'?'ยังไม่มีข้อสอบ':'No questions yet'}</td></tr>`; return; }
-  tbody.innerHTML = allQuestions.map((q,i) => `
+function renderQuestionsTable() {
+  const tbody = document.getElementById('questionsTableBody');
+  const ansMap_th = { '1': 'ก', '2': 'ข', '3': 'ค', '4': 'ง' };
+  const ansMap_en = { '1': 'A', '2': 'B', '3': 'C', '4': 'D' };
+  const ansMap = currentLang === 'th' ? ansMap_th : ansMap_en;
+
+  if (!questions.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:30px;"><i class="fa fa-inbox me-2"></i>${currentLang === 'th' ? 'ยังไม่มีข้อสอบ' : 'No questions yet'}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = questions.map((q, i) => `
     <tr>
-      <td>${i+1}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.questionTH}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ttm-muted)">${q.questionEN}</td>
-      <td><span style="color:var(--ttm-gold);font-weight:700">${q.answer}</span></td>
-      <td>
-        <button class="btn-edit-ttm me-1" onclick="editQuestion(${q.id})"><i class="fas fa-edit me-1"></i>${currentLang==='th'?'แก้ไข':'Edit'}</button>
-        <button class="btn-danger-ttm" onclick="delQuestion(${q.rowIndex})"><i class="fas fa-trash me-1"></i>${currentLang==='th'?'ลบ':'Del'}</button>
+      <td style="font-weight:700;color:var(--accent)">${i + 1}</td>
+      <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${q.questionTH}">${q.questionTH}</td>
+      <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${q.questionEN}">${q.questionEN || '-'}</td>
+      <td><span class="badge-role badge-active">${ansMap[q.answer] || q.answer}</span></td>
+      <td style="white-space:nowrap;">
+        <button class="btn-warning-custom btn-sm-custom me-1" onclick="editQuestion(${i})"><i class="fa fa-edit"></i></button>
+        <button class="btn-danger-custom btn-sm-custom" onclick="confirmDelete('deleteQuestion', ${q.row})"><i class="fa fa-trash"></i></button>
       </td>
-    </tr>`).join('');
+    </tr>
+  `).join('');
 }
 
-const OPT_LABELS = { th: ['ก','ข','ค','ง'], en: ['A','B','C','D'] };
+let selectedAnswer = null;
 
-function buildOptRows(vals) {
-  const opts = OPT_LABELS[currentLang] || OPT_LABELS.th;
-  return [1,2,3,4].map(n => `
-    <div class="option-row">
-      <div class="option-label">${opts[n-1]}</div>
-      <input type="radio" name="correctAns" value="${n}" class="radio-correct" id="rad${n}" ${vals&&vals.answer==n?'checked':''}>
-      <div style="flex:1;display:flex;gap:8px;">
-        <input type="text" class="form-control-dark" id="opt${n}TH" placeholder="${opts[n-1]}. ภาษาไทย" value="${vals?vals['opt'+n+'TH']:''}">
-        <input type="text" class="form-control-dark" id="opt${n}EN" placeholder="${opts[n-1]}. English" value="${vals?vals['opt'+n+'EN']:''}">
-      </div>
-    </div>`).join('');
+function selectAnswer(num) {
+  selectedAnswer = num;
+  document.querySelectorAll('.answer-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i + 1 === num);
+  });
+  document.getElementById('qAnswer').value = num;
 }
 
-function openQModal(q) {
-  document.getElementById('qRowIndex').value = q ? q.rowIndex : '';
-  document.getElementById('qModalTitle').textContent = q ? (currentLang==='th'?'แก้ไขข้อสอบ':'Edit Question') : (currentLang==='th'?'เพิ่มข้อสอบ':'Add Question');
-  document.getElementById('qTH').value = q ? q.questionTH : '';
-  document.getElementById('qEN').value = q ? q.questionEN : '';
-  document.getElementById('optRows').innerHTML = buildOptRows(q);
-  new bootstrap.Modal(document.getElementById('qModal')).show();
+function openQModal(editIdx) {
+  clearQForm();
+  if (editIdx === undefined) {
+    document.getElementById('qModalTitle').textContent = currentLang === 'th' ? 'เพิ่มข้อสอบ' : 'Add Question';
+    document.getElementById('qEditRow').value = '';
+  }
+  openModal('qModal');
 }
 
-function editQuestion(id) { openQModal(allQuestions.find(q=>q.id===id)); }
+function clearQForm() {
+  ['qTH','qEN','opt1TH','opt1EN','opt2TH','opt2EN','opt3TH','opt3EN','opt4TH','opt4EN'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  selectedAnswer = null;
+  document.getElementById('qAnswer').value = '';
+  document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function editQuestion(idx) {
+  const q = questions[idx];
+  document.getElementById('qModalTitle').textContent = currentLang === 'th' ? 'แก้ไขข้อสอบ' : 'Edit Question';
+  document.getElementById('qEditRow').value = q.row;
+  document.getElementById('qTH').value = q.questionTH || '';
+  document.getElementById('qEN').value = q.questionEN || '';
+  document.getElementById('opt1TH').value = q.opt1TH || '';
+  document.getElementById('opt1EN').value = q.opt1EN || '';
+  document.getElementById('opt2TH').value = q.opt2TH || '';
+  document.getElementById('opt2EN').value = q.opt2EN || '';
+  document.getElementById('opt3TH').value = q.opt3TH || '';
+  document.getElementById('opt3EN').value = q.opt3EN || '';
+  document.getElementById('opt4TH').value = q.opt4TH || '';
+  document.getElementById('opt4EN').value = q.opt4EN || '';
+  selectAnswer(parseInt(q.answer));
+  openModal('qModal');
+}
 
 function saveQuestion() {
-  const rowIndex = document.getElementById('qRowIndex').value;
-  const radios = document.querySelectorAll('input[name="correctAns"]');
-  let answer = '';
-  radios.forEach(r => { if(r.checked) answer = r.value; });
-  if (!document.getElementById('qTH').value || !answer) { showToast(currentLang==='th'?'กรุณากรอกข้อมูลให้ครบ':'Please fill all fields','error'); return; }
-  const q = {
-    questionTH: document.getElementById('qTH').value, questionEN: document.getElementById('qEN').value,
-    opt1TH: document.getElementById('opt1TH').value, opt1EN: document.getElementById('opt1EN').value,
-    opt2TH: document.getElementById('opt2TH').value, opt2EN: document.getElementById('opt2EN').value,
-    opt3TH: document.getElementById('opt3TH').value, opt3EN: document.getElementById('opt3EN').value,
-    opt4TH: document.getElementById('opt4TH').value, opt4EN: document.getElementById('opt4EN').value,
-    answer: answer
+  const qData = {
+    id: Date.now(),
+    questionTH: document.getElementById('qTH').value.trim(),
+    questionEN: document.getElementById('qEN').value.trim(),
+    opt1TH: document.getElementById('opt1TH').value.trim(),
+    opt1EN: document.getElementById('opt1EN').value.trim(),
+    opt2TH: document.getElementById('opt2TH').value.trim(),
+    opt2EN: document.getElementById('opt2EN').value.trim(),
+    opt3TH: document.getElementById('opt3TH').value.trim(),
+    opt3EN: document.getElementById('opt3EN').value.trim(),
+    opt4TH: document.getElementById('opt4TH').value.trim(),
+    opt4EN: document.getElementById('opt4EN').value.trim(),
+    answer: document.getElementById('qAnswer').value
   };
-  const fn = rowIndex ? google.script.run.withSuccessHandler(r=>{ if(r.success){showToast(currentLang==='th'?'แก้ไขสำเร็จ':'Updated'); bootstrap.Modal.getInstance(document.getElementById('qModal')).hide(); loadQuestions();} else showToast(r.message,'error'); }).updateQuestion(parseInt(rowIndex), q)
-    : google.script.run.withSuccessHandler(r=>{ if(r.success){showToast(currentLang==='th'?'เพิ่มสำเร็จ':'Added'); bootstrap.Modal.getInstance(document.getElementById('qModal')).hide(); loadQuestions();} else showToast(r.message,'error'); }).addQuestion(q);
-}
 
-function delQuestion(rowIndex) {
-  if (!confirm(currentLang==='th'?'ยืนยันลบข้อสอบนี้?':'Delete this question?')) return;
-  google.script.run.withSuccessHandler(r=>{ if(r.success){showToast(currentLang==='th'?'ลบสำเร็จ':'Deleted'); loadQuestions();} else showToast(r.message,'error'); }).deleteQuestion(rowIndex);
-}
-
-// ---- VIDEOS ----
-function loadVideos() {
-  google.script.run.withSuccessHandler(function(vs) {
-    allVideos = vs;
-    document.getElementById('stat-v').textContent = vs.length;
-    renderVideos();
-  }).getVideos();
-}
-
-function renderVideos() {
-  const c = document.getElementById('videoCards');
-  if (!allVideos.length) { c.innerHTML = `<p style="color:var(--ttm-muted);text-align:center;">${currentLang==='th'?'ยังไม่มีวิดีโอ':'No videos yet'}</p>`; return; }
-  c.innerHTML = allVideos.map(v => `
-    <div style="background:var(--ttm-bg);border:1px solid var(--ttm-border);border-radius:10px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:12px;">
-      <i class="fab fa-youtube" style="font-size:24px;color:#ff0000;flex-shrink:0;"></i>
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:600;font-size:14px;">${v.title}</div>
-        <div style="font-size:12px;color:var(--ttm-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.url}</div>
-      </div>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <button class="btn-edit-ttm" onclick="editVideo(${v.id})"><i class="fas fa-edit"></i></button>
-        <button class="btn-danger-ttm" onclick="delVideo(${v.rowIndex})"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function openVModal(v) {
-  document.getElementById('vRowIndex').value = v ? v.rowIndex : '';
-  document.getElementById('vModalTitle').textContent = v ? (currentLang==='th'?'แก้ไขวิดีโอ':'Edit Video') : (currentLang==='th'?'เพิ่มวิดีโอ':'Add Video');
-  document.getElementById('vTitle').value = v ? v.title : '';
-  document.getElementById('vUrl').value = v ? v.url : '';
-  document.getElementById('vOrder').value = v ? v.order : 1;
-  new bootstrap.Modal(document.getElementById('vModal')).show();
-}
-function editVideo(id) { openVModal(allVideos.find(v=>v.id===id)); }
-function saveVideo() {
-  const rowIndex = document.getElementById('vRowIndex').value;
-  const title = document.getElementById('vTitle').value;
-  const url = document.getElementById('vUrl').value;
-  const order = document.getElementById('vOrder').value;
-  if (!title||!url) { showToast(currentLang==='th'?'กรุณากรอกข้อมูลให้ครบ':'Fill all fields','error'); return; }
-  const cb = r=>{ if(r.success){showToast(currentLang==='th'?'บันทึกสำเร็จ':'Saved'); bootstrap.Modal.getInstance(document.getElementById('vModal')).hide(); loadVideos();} else showToast(r.message,'error'); };
-  if (rowIndex) google.script.run.withSuccessHandler(cb).updateVideo(parseInt(rowIndex), title, url, order);
-  else google.script.run.withSuccessHandler(cb).addVideo(title, url, order);
-}
-function delVideo(rowIndex) {
-  if (!confirm(currentLang==='th'?'ยืนยันลบวิดีโอ?':'Delete this video?')) return;
-  google.script.run.withSuccessHandler(r=>{ if(r.success){showToast(currentLang==='th'?'ลบสำเร็จ':'Deleted'); loadVideos();} else showToast(r.message,'error'); }).deleteVideo(rowIndex);
-}
-
-// ---- USERS ----
-function loadUsers() {
-  google.script.run.withSuccessHandler(function(us) {
-    allUsers = us;
-    document.getElementById('stat-u').textContent = us.length;
-    renderUsers();
-  }).getUsers();
-}
-function renderUsers() {
-  const tbody = document.getElementById('uBody');
-  if (!allUsers.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--ttm-muted);padding:24px">${currentLang==='th'?'ยังไม่มีผู้ใช้':'No users'}</td></tr>`; return; }
-  tbody.innerHTML = allUsers.map(u => `
-    <tr>
-      <td><strong>${u.username}</strong><br><span style="color:var(--ttm-muted);font-size:12px;">${u.displayName||''}</span></td>
-      <td style="font-family:monospace;letter-spacing:1px;">${u.password}</td>
-      <td><span class="badge-${u.role==='admin'?'admin':'user'}">${u.role}</span></td>
-      <td><span style="color:${u.status==='active'?'#3fb950':'var(--ttm-muted)'}">${u.status}</span></td>
-      <td>
-        <button class="btn-edit-ttm me-1" onclick="editUser(${allUsers.indexOf(u)})"><i class="fas fa-edit me-1"></i>${currentLang==='th'?'แก้ไข':'Edit'}</button>
-        <button class="btn-danger-ttm" onclick="delUser(${u.rowIndex})"><i class="fas fa-trash me-1"></i>${currentLang==='th'?'ลบ':'Del'}</button>
-      </td>
-    </tr>`).join('');
-}
-function openUModal(u) {
-  document.getElementById('uRowIndex').value = u ? u.rowIndex : '';
-  document.getElementById('uModalTitle').textContent = u ? (currentLang==='th'?'แก้ไขผู้ใช้':'Edit User') : (currentLang==='th'?'เพิ่มผู้ใช้':'Add User');
-  document.getElementById('uDisplayName').value = u ? u.displayName||'' : '';
-  document.getElementById('uUsername').value = u ? u.username : '';
-  document.getElementById('uPassword').value = u ? u.password : '';
-  document.getElementById('uRole').value = u ? u.role : 'user';
-  document.getElementById('uStatus').value = u ? u.status : 'active';
-  new bootstrap.Modal(document.getElementById('uModal')).show();
-}
-function editUser(idx) { openUModal(allUsers[idx]); }
-function genPassword() {
-  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-  let pw = '';
-  for (let i = 0; i < 8; i++) pw += chars[Math.floor(Math.random()*chars.length)];
-  document.getElementById('uPassword').value = pw;
-}
-function saveUser() {
-  const rowIndex = document.getElementById('uRowIndex').value;
-  const username = document.getElementById('uUsername').value;
-  const password = document.getElementById('uPassword').value;
-  const role = document.getElementById('uRole').value;
-  const status = document.getElementById('uStatus').value;
-  const displayName = document.getElementById('uDisplayName').value;
-  if (!username||!password) { showToast(currentLang==='th'?'กรุณากรอกข้อมูลให้ครบ':'Fill all fields','error'); return; }
-  const cb = r=>{ if(r.success){showToast(currentLang==='th'?'บันทึกสำเร็จ':'Saved'); bootstrap.Modal.getInstance(document.getElementById('uModal')).hide(); loadUsers();} else showToast(r.message,'error'); };
-  if (rowIndex) google.script.run.withSuccessHandler(cb).updateUser(parseInt(rowIndex), username, password, role, status, displayName);
-  else google.script.run.withSuccessHandler(cb).addUser(username, password, role, displayName);
-}
-function delUser(rowIndex) {
-  if (!confirm(currentLang==='th'?'ยืนยันลบผู้ใช้?':'Delete this user?')) return;
-  google.script.run.withSuccessHandler(r=>{ if(r.success){showToast(currentLang==='th'?'ลบสำเร็จ':'Deleted'); loadUsers();} else showToast(r.message,'error'); }).deleteUser(rowIndex);
-}
-
-// ---- SETTINGS ----
-function loadSettings() {
-  google.script.run.withSuccessHandler(function(s) {
-    if (s.passing_score) document.getElementById('passingScore').value = s.passing_score;
-  }).getSettings();
-}
-function savePassingScore() {
-  const v = parseInt(document.getElementById('passingScore').value);
-  if (!v||v<1||v>30) { showToast(currentLang==='th'?'กรุณากรอก 1-30':'Enter value 1-30','error'); return; }
-  google.script.run.withSuccessHandler(r=>{ if(r.success)showToast(currentLang==='th'?'บันทึกสำเร็จ':'Saved'); else showToast(r.message,'error'); }).saveSetting('passing_score', v);
-}
-
-// ---- RESULTS ----
-function loadResults() {
-  google.script.run.withSuccessHandler(function(rs) {
-    document.getElementById('stat-r').textContent = rs.length;
-    const tbody = document.getElementById('resBody');
-    if (!rs.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--ttm-muted);padding:24px">${currentLang==='th'?'ยังไม่มีข้อมูล':'No records'}</td></tr>`; return; }
-    tbody.innerHTML = rs.map(r => `
-      <tr>
-        <td style="white-space:nowrap;font-size:12px;">${r['Date']||''}</td>
-        <td>${r['Username']||''}</td>
-        <td>${r['Name']||''}</td>
-        <td>${r['Company']||''}</td>
-        <td><strong>${r['Score']||''}/${r['Total']||30}</strong></td>
-        <td><span class="badge-${r['Result']==='PASS'?'pass':'fail'}">${i18n[currentLang][r['Result']]||r['Result']}</span></td>
-      </tr>`).join('');
-    // Recent table on dashboard
-    const recentBody = document.getElementById('recentBody');
-    recentBody.innerHTML = rs.slice(0,10).map(r => `
-      <tr>
-        <td style="white-space:nowrap;font-size:12px;">${r['Date']||''}</td>
-        <td>${r['Name']||''}</td>
-        <td>${r['Company']||''}</td>
-        <td><strong>${r['Score']||''}</strong></td>
-        <td><span class="badge-${r['Result']==='PASS'?'pass':'fail'}">${i18n[currentLang][r['Result']]||r['Result']}</span></td>
-      </tr>`).join('');
-  }).getResults(100);
-}
-
-function renderAll() { if(currentPage==='questions') renderQuestions(); if(currentPage==='videos') renderVideos(); if(currentPage==='users') renderUsers(); }
-
-// ---- INIT ----
-window.addEventListener('load', function() {
-  const saved = sessionStorage.getItem('ttm_user');
-  if (saved) {
-    userData = JSON.parse(saved);
-    const name = userData.displayName || userData.username || 'Admin';
-    document.getElementById('adminName').textContent = name;
-    document.getElementById('adminAvatar').textContent = name.charAt(0).toUpperCase();
-    setLang(userData.lang || localStorage.getItem('ttm_lang') || 'th');
-  } else {
-    setLang(localStorage.getItem('ttm_lang') || 'th');
+  if (!qData.questionTH || !qData.answer) {
+    showAlert(currentLang === 'th' ? 'กรุณากรอกคำถามและเลือกเฉลย' : 'Please fill question and select answer', 'error');
+    return;
   }
-  loadResults(); // load dashboard data
-});
+
+  const row = document.getElementById('qEditRow').value;
+  const fn = row ? 'updateQuestion' : 'addQuestion';
+  const args = row ? [parseInt(row), qData] : [qData];
+
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success) {
+        closeModal('qModal');
+        showAlert(currentLang === 'th' ? 'บันทึกสำเร็จ' : 'Saved successfully', 'success');
+        loadQuestions();
+      } else { showAlert(r.message, 'error'); }
+    })
+    [fn](...args);
+}
+
+// ==========================================
+// VIDEOS
+// ==========================================
+let videos = [];
+
+function loadVideos() {
+  const container = document.getElementById('videosList');
+  container.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:30px;"><i class="fa fa-spinner fa-spin me-2"></i>กำลังโหลด...</div>`;
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      videos = r.success ? r.data : [];
+      renderVideosList();
+    })
+    .getVideos();
+}
+
+function renderVideosList() {
+  const container = document.getElementById('videosList');
+  if (!videos.length) {
+    container.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:30px;"><i class="fa fa-inbox me-2"></i>${currentLang === 'th' ? 'ยังไม่มีวิดีโอ' : 'No videos yet'}</div>`;
+    return;
+  }
+  container.innerHTML = videos.map((v, i) => `
+    <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:12px;margin-bottom:10px;">
+      <div style="width:50px;height:38px;background:rgba(230,57,70,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#ff8fa3;">
+        <i class="fa fa-youtube fa-lg"></i>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${v.title}</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${v.url}</div>
+      </div>
+      <span class="badge-role ${v.active ? 'badge-active' : 'badge-inactive'}" style="flex-shrink:0;">
+        ${v.active ? (currentLang === 'th' ? 'ใช้งาน' : 'Active') : (currentLang === 'th' ? 'ปิด' : 'Off')}
+      </span>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn-warning-custom btn-sm-custom" onclick="editVideo(${i})"><i class="fa fa-edit"></i></button>
+        <button class="btn-danger-custom btn-sm-custom" onclick="confirmDelete('deleteVideo', ${v.row})"><i class="fa fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openVideoModal() {
+  document.getElementById('videoModalTitle').textContent = currentLang === 'th' ? 'เพิ่มวิดีโอ' : 'Add Video';
+  document.getElementById('videoEditRow').value = '';
+  document.getElementById('videoTitle').value = '';
+  document.getElementById('videoUrl').value = '';
+  document.getElementById('videoActive').checked = true;
+  openModal('videoModal');
+}
+
+function editVideo(idx) {
+  const v = videos[idx];
+  document.getElementById('videoModalTitle').textContent = currentLang === 'th' ? 'แก้ไขวิดีโอ' : 'Edit Video';
+  document.getElementById('videoEditRow').value = v.row;
+  document.getElementById('videoTitle').value = v.title;
+  document.getElementById('videoUrl').value = v.url;
+  document.getElementById('videoActive').checked = v.active;
+  openModal('videoModal');
+}
+
+function saveVideo() {
+  const data = {
+    title: document.getElementById('videoTitle').value.trim(),
+    url: document.getElementById('videoUrl').value.trim(),
+    active: document.getElementById('videoActive').checked
+  };
+  if (!data.title || !data.url) {
+    showAlert(currentLang === 'th' ? 'กรุณากรอกชื่อและ URL วิดีโอ' : 'Please fill title and URL', 'error');
+    return;
+  }
+  const row = document.getElementById('videoEditRow').value;
+  const fn = row ? 'updateVideo' : 'addVideo';
+  const args = row ? [parseInt(row), data] : [data];
+
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success) {
+        closeModal('videoModal');
+        showAlert(currentLang === 'th' ? 'บันทึกสำเร็จ' : 'Saved', 'success');
+        loadVideos();
+      } else { showAlert(r.message, 'error'); }
+    })
+    [fn](...args);
+}
+
+// ==========================================
+// USERS
+// ==========================================
+let users = [];
+
+function loadUsers() {
+  google.script.run
+    .withSuccessHandler(function(r) {
+      users = r.success ? r.data : [];
+      renderUsersTable();
+    })
+    .getUsers();
+}
+
+function renderUsersTable() {
+  const tbody = document.getElementById('usersTableBody');
+  if (!users.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;"><i class="fa fa-inbox me-2"></i>${currentLang === 'th' ? 'ยังไม่มีผู้ใช้' : 'No users'}</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = users.map((u, i) => `
+    <tr>
+      <td style="color:var(--accent);font-weight:700;">${i + 1}</td>
+      <td><code style="color:var(--light-blue,#a8dadc);background:rgba(168,218,220,0.1);padding:2px 8px;border-radius:6px;font-size:0.85rem;">${u.username}</code></td>
+      <td>${u.displayName || '-'}</td>
+      <td><span class="badge-role ${u.role === 'admin' ? 'badge-admin' : 'badge-user'}">${u.role === 'admin' ? 'Admin' : 'User'}</span></td>
+      <td><span class="badge-role ${u.active ? 'badge-active' : 'badge-inactive'}">${u.active ? (currentLang === 'th' ? 'ใช้งาน' : 'Active') : (currentLang === 'th' ? 'ระงับ' : 'Inactive')}</span></td>
+      <td style="white-space:nowrap;">
+        <button class="btn-warning-custom btn-sm-custom me-1" onclick="editUser(${i})"><i class="fa fa-edit"></i></button>
+        <button class="btn-danger-custom btn-sm-custom" onclick="confirmDelete('deleteUser', ${u.row})"><i class="fa fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openUserModal() {
+  document.getElementById('userModalTitle').textContent = currentLang === 'th' ? 'เพิ่มผู้ใช้' : 'Add User';
+  document.getElementById('userEditRow').value = '';
+  document.getElementById('userUsername').value = '';
+  document.getElementById('userDisplay').value = '';
+  document.getElementById('userPassword').value = '';
+  document.getElementById('userRole').value = 'user';
+  document.getElementById('userActive').value = 'true';
+  document.getElementById('pwdBar').style.width = '0%';
+  openModal('userModal');
+}
+
+function editUser(idx) {
+  const u = users[idx];
+  document.getElementById('userModalTitle').textContent = currentLang === 'th' ? 'แก้ไขผู้ใช้' : 'Edit User';
+  document.getElementById('userEditRow').value = u.row;
+  document.getElementById('userUsername').value = u.username;
+  document.getElementById('userDisplay').value = u.displayName;
+  document.getElementById('userPassword').value = u.password;
+  document.getElementById('userRole').value = u.role;
+  document.getElementById('userActive').value = u.active ? 'true' : 'false';
+  openModal('userModal');
+}
+
+function genPassword() {
+  google.script.run
+    .withSuccessHandler(pwd => {
+      document.getElementById('userPassword').value = pwd;
+      checkPwdStrength(pwd);
+    })
+    .generateRandomPassword(10);
+}
+
+function checkPwdStrength(pwd) {
+  const bar = document.getElementById('pwdBar');
+  const label = document.getElementById('pwdStrengthLabel');
+  let score = 0;
+  if (pwd.length >= 8) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+  const colors = ['#e63946','#e63946','#e9c46a','#2a9d8f','#2a9d8f'];
+  const labels_th = ['','อ่อนมาก','อ่อน','ปานกลาง','แข็งแรง'];
+  const labels_en = ['','Very Weak','Weak','Medium','Strong'];
+  bar.style.width = (score * 25) + '%';
+  bar.style.background = colors[score];
+  label.textContent = (currentLang === 'th' ? labels_th : labels_en)[score] || '';
+  label.style.color = colors[score];
+}
+
+function saveUser() {
+  const data = {
+    username: document.getElementById('userUsername').value.trim(),
+    password: document.getElementById('userPassword').value.trim(),
+    displayName: document.getElementById('userDisplay').value.trim(),
+    role: document.getElementById('userRole').value,
+    active: document.getElementById('userActive').value === 'true'
+  };
+  if (!data.username || !data.password) {
+    showAlert(currentLang === 'th' ? 'กรุณากรอก Username และ Password' : 'Please fill username and password', 'error');
+    return;
+  }
+  const row = document.getElementById('userEditRow').value;
+  const fn = row ? 'updateUser' : 'addUser';
+  const args = row ? [parseInt(row), data] : [data];
+
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success) {
+        closeModal('userModal');
+        showAlert(currentLang === 'th' ? 'บันทึกสำเร็จ' : 'Saved', 'success');
+        loadUsers();
+      } else { showAlert(r.message, 'error'); }
+    })
+    [fn](...args);
+}
+
+// ==========================================
+// SETTINGS
+// ==========================================
+function loadSettings() {
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success && r.data.passing_score) {
+        document.getElementById('passingScore').value = r.data.passing_score;
+      }
+    })
+    .getSettings();
+}
+
+function savePassingScore() {
+  const val = parseInt(document.getElementById('passingScore').value);
+  if (!val || val < 1 || val > 30) {
+    showAlert(currentLang === 'th' ? 'กรุณาระบุคะแนนระหว่าง 1-30' : 'Please enter score between 1-30', 'error');
+    return;
+  }
+  google.script.run
+    .withSuccessHandler(r => {
+      if (r.success) showAlert(currentLang === 'th' ? 'บันทึกเกณฑ์ผ่านสำเร็จ' : 'Passing score saved', 'success');
+    })
+    .saveSettings('passing_score', val);
+}
+
+// ==========================================
+// CONFIRM DELETE
+// ==========================================
+function confirmDelete(action, rowNum) {
+  document.getElementById('confirmMsg').textContent = currentLang === 'th'
+    ? 'ข้อมูลจะถูกลบถาวรและไม่สามารถกู้คืนได้'
+    : 'This will permanently delete the data.';
+
+  const btn = document.getElementById('confirmOkBtn');
+  btn.onclick = function() {
+    google.script.run
+      .withSuccessHandler(r => {
+        closeModal('confirmModal');
+        if (r.success) {
+          showAlert(currentLang === 'th' ? 'ลบข้อมูลสำเร็จ' : 'Deleted successfully', 'success');
+          if (action === 'deleteQuestion') loadQuestions();
+          if (action === 'deleteUser') loadUsers();
+          if (action === 'deleteVideo') loadVideos();
+        } else { showAlert(r.message, 'error'); }
+      })
+      [action](rowNum);
+  };
+
+  openModal('confirmModal');
+}
+
+// ==========================================
+// LOGOUT
+// ==========================================
+function logout() {
+  sessionStorage.clear();
+  window.location.href = '?page=index';
+}
 </script>
 </body>
 </html>
