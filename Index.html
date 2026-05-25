@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTM - ระบบอบรมความปลอดภัย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --ttm-red:#C0392B; --ttm-dark-red:#922B21;
+    --ttm-gold:#D4AC0D;
+  }
+  * { font-family:'Sarabun',sans-serif; box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh;
+    background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; position:relative;
+  }
+  /* Animated grid */
+  .grid-overlay {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(192,57,43,0.08) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(192,57,43,0.08) 1px,transparent 1px);
+    background-size:60px 60px;
+    animation:gridMove 20s linear infinite;
+  }
+  @keyframes gridMove{0%{background-position:0 0}100%{background-position:0 60px}}
+
+  /* Floating particles */
+  .bg-anim{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .particle{
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle,rgba(192,57,43,0.35) 0%,transparent 70%);
+    animation:floatUp linear infinite;
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(110vh) scale(0);opacity:0}
+    10%{opacity:1}90%{opacity:.25}
+    100%{transform:translateY(-10vh) scale(1);opacity:0}
+  }
+
+  .login-wrapper{position:relative;z-index:10;width:100%;max-width:460px;padding:20px;}
+  .login-card{
+    background:rgba(255,255,255,.05);backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.15);border-radius:24px;
+    padding:48px 40px;
+    box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05) inset;
+    animation:slideUp .7s cubic-bezier(.23,1,.32,1) both;
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:none}}
+
+  /* Logo */
+  .logo-section{text-align:center;margin-bottom:28px;}
+  .logo-section img{
+    height:64px;
+    filter:drop-shadow(0 4px 16px rgba(192,57,43,.5));
+    animation:logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse{
+    0%,100%{filter:drop-shadow(0 4px 16px rgba(192,57,43,.5))}
+    50%{filter:drop-shadow(0 4px 32px rgba(192,57,43,.9))}
+  }
+  .sys-title{color:#fff;font-size:15px;font-weight:700;margin-top:14px;line-height:1.6;text-shadow:0 2px 8px rgba(0,0,0,.5);}
+  .sys-subtitle{color:rgba(255,255,255,.45);font-size:13px;margin-top:4px;}
+
+  /* Lang switcher */
+  .lang-switcher{display:flex;gap:8px;justify-content:center;margin-bottom:18px;}
+  .lang-btn{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+    border-radius:8px;color:rgba(255,255,255,.5);font-size:13px;font-weight:600;
+    padding:6px 16px;cursor:pointer;transition:all .2s;font-family:'Sarabun',sans-serif;
+  }
+  .lang-btn.active{background:var(--ttm-red);border-color:var(--ttm-red);color:#fff;}
+
+  /* Divider */
+  .divider{display:flex;align-items:center;gap:12px;margin:16px 0;}
+  .divider-line{flex:1;height:1px;background:rgba(255,255,255,.15);}
+  .divider-text{color:rgba(255,255,255,.4);font-size:12px;white-space:nowrap;}
+
+  /* Inputs */
+  .form-label{color:rgba(255,255,255,.75);font-size:14px;font-weight:500;margin-bottom:7px;display:block;}
+  .form-control{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;color:#fff;padding:13px 16px;font-size:15px;
+    width:100%;transition:all .3s;font-family:'Sarabun',sans-serif;
+  }
+  .form-control:focus{
+    background:rgba(255,255,255,.13);border-color:var(--ttm-red);
+    box-shadow:0 0 0 3px rgba(192,57,43,.25);color:#fff;outline:none;
+  }
+  .form-control::placeholder{color:rgba(255,255,255,.3);}
+
+  /* Password row */
+  .pw-wrap{display:flex;}
+  .pw-wrap .form-control{border-radius:12px 0 0 12px;flex:1;}
+  .btn-eye{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+    border-left:none;border-radius:0 12px 12px 0;
+    color:rgba(255,255,255,.5);padding:0 16px;cursor:pointer;transition:all .2s;
+  }
+  .btn-eye:hover{color:#fff;background:rgba(255,255,255,.15);}
+
+  /* Login button */
+  .btn-login{
+    width:100%;
+    background:linear-gradient(135deg,var(--ttm-red),var(--ttm-dark-red));
+    border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;
+    padding:14px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
+    font-family:'Sarabun',sans-serif;margin-top:8px;
+  }
+  .btn-login::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+    opacity:0;transition:opacity .3s;
+  }
+  .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(192,57,43,.5);}
+  .btn-login:hover::before{opacity:1;}
+  .btn-login:active{transform:none;}
+  .btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+  /* Error alert */
+  .alert-error{
+    background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.4);
+    border-radius:10px;color:#ff8a7a;font-size:14px;padding:12px 16px;
+    margin-bottom:16px;display:none;
+  }
+  .shake{animation:shake .4s ease;}
+  @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  .footer-note{text-align:center;color:rgba(255,255,255,.25);font-size:12px;margin-top:22px;}
+  @media(max-width:480px){.login-card{padding:32px 22px;}}
+</style>
+</head>
+<body>
+<div class="bg-anim" id="bgAnim"></div>
+<div class="grid-overlay"></div>
+
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="logo-section">
+      <img src="https://ttm-jda.com/themes/default/images/all/logo/pic_logo.png" alt="TTM Logo"
+           onerror="this.style.display='none'">
+      <div class="sys-title" id="sysTitle">
+        ระบบอบรมข้อกำหนดด้านความปลอดภัย<br>สำหรับผู้รับเหมาฯ TTM
+      </div>
+      <div class="sys-subtitle">Safety Training System for Contractors</div>
+    </div>
+
+    <!-- Language -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('th')" id="btnTH">🇹🇭 ไทย</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btnEN">🇺🇸 English</button>
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-text" id="loginLabel">เข้าสู่ระบบ</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="alert-error" id="alertError">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      <span id="errorMsg">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span>
+    </div>
+
+    <!-- Form -->
+    <div style="margin-bottom:16px;">
+      <label class="form-label" id="labelUser">
+        <i class="fas fa-user me-2"></i>ชื่อผู้ใช้
+      </label>
+      <input type="text" class="form-control" id="username"
+             placeholder="กรอกชื่อผู้ใช้" autocomplete="username"
+             onkeydown="if(event.key==='Enter')document.getElementById('password').focus()">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label class="form-label" id="labelPass">
+        <i class="fas fa-lock me-2"></i>รหัสผ่าน
+      </label>
+      <div class="pw-wrap">
+        <input type="password" class="form-control" id="password"
+               placeholder="กรอกรหัสผ่าน" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="btn-eye" onclick="togglePass()" type="button">
+          <i class="fas fa-eye" id="eyeIcon"></i>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()" id="loginBtn">
+      <span id="loginBtnInner">
+        <i class="fas fa-sign-in-alt me-2"></i><span id="loginBtnText">เข้าสู่ระบบ</span>
+      </span>
+    </button>
+
+    <div class="footer-note">© TTM Safety Training System · Powered by Google Apps Script</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+// =============================================
+// i18n
+// =============================================
+let currentLang = 'th';
+const i18n = {
+  th: {
+    sysTitle:'ระบบอบรมข้อกำหนดด้านความปลอดภัย<br>สำหรับผู้รับเหมาฯ TTM',
+    loginLabel:'เข้าสู่ระบบ',
+    labelUser:'<i class="fas fa-user me-2"></i>ชื่อผู้ใช้',
+    labelPass:'<i class="fas fa-lock me-2"></i>รหัสผ่าน',
+    loginBtnText:'เข้าสู่ระบบ',
+    userPH:'กรอกชื่อผู้ใช้', passPH:'กรอกรหัสผ่าน',
+    loadingText:'กำลังตรวจสอบ...',
+    errEmpty:'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน',
+    errInvalid:'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+    errConn:'เกิดข้อผิดพลาด กรุณาลองใหม่'
+  },
+  en: {
+    sysTitle:'Safety Training System<br>for Contractors TTM',
+    loginLabel:'Login',
+    labelUser:'<i class="fas fa-user me-2"></i>Username',
+    labelPass:'<i class="fas fa-lock me-2"></i>Password',
+    loginBtnText:'Sign In',
+    userPH:'Enter username', passPH:'Enter password',
+    loadingText:'Verifying...',
+    errEmpty:'Please enter username and password',
+    errInvalid:'Invalid username or password',
+    errConn:'Connection error, please try again'
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ttm_lang', lang);
+  const t = i18n[lang];
+  document.getElementById('sysTitle').innerHTML    = t.sysTitle;
+  document.getElementById('loginLabel').textContent = t.loginLabel;
+  document.getElementById('labelUser').innerHTML   = t.labelUser;
+  document.getElementById('labelPass').innerHTML   = t.labelPass;
+  document.getElementById('loginBtnText').textContent = t.loginBtnText;
+  document.getElementById('username').placeholder  = t.userPH;
+  document.getElementById('password').placeholder  = t.passPH;
+  document.getElementById('btnTH').classList.toggle('active', lang==='th');
+  document.getElementById('btnEN').classList.toggle('active', lang==='en');
+}
+
+// =============================================
+// Toggle Password Visibility
+// =============================================
+function togglePass() {
+  const p  = document.getElementById('password');
+  const ic = document.getElementById('eyeIcon');
+  if (p.type === 'password') { p.type = 'text';     ic.className = 'fas fa-eye-slash'; }
+  else                        { p.type = 'password'; ic.className = 'fas fa-eye'; }
+}
+
+// =============================================
+// Error display
+// =============================================
+function showError(msg) {
+  const el = document.getElementById('alertError');
+  document.getElementById('errorMsg').textContent = msg;
+  el.style.display = 'block';
+  el.classList.remove('shake');
+  void el.offsetWidth; // reflow
+  el.classList.add('shake');
+}
+function hideError() {
+  document.getElementById('alertError').style.display = 'none';
+}
+
+// =============================================
+// Loading state
+// =============================================
+function setLoading(on) {
+  const btn = document.getElementById('loginBtn');
+  const t   = i18n[currentLang];
+  btn.disabled = on;
+  document.getElementById('loginBtnInner').innerHTML = on
+    ? `<span class="spinner-border spinner-border-sm me-2"></span>${t.loadingText}`
+    : `<i class="fas fa-sign-in-alt me-2"></i>${t.loginBtnText}`;
+}
+
+// =============================================
+// LOGIN — แก้ไขหลัก: ใช้ redirectUrl ที่ส่งมาจาก server
+// =============================================
+function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const t = i18n[currentLang];
+
+  hideError();
+  if (!username || !password) { showError(t.errEmpty); return; }
+
+  setLoading(true);
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      setLoading(false);
+      if (res.success) {
+        // บันทึกข้อมูล session
+        sessionStorage.setItem('ttm_user', JSON.stringify({
+          username:    res.username,
+          displayName: res.displayName,
+          role:        res.role,
+          lang:        currentLang
+        }));
+        // ✅ redirect ไปหน้าที่ถูกต้องด้วย URL ที่ server ส่งมา
+        window.top.location.href = res.redirectUrl;
+      } else {
+        showError(res.message || t.errInvalid);
+      }
+    })
+    .withFailureHandler(function(err) {
+      setLoading(false);
+      showError(t.errConn + (err.message ? ': ' + err.message : ''));
+    })
+    .login(username, password);
+}
+
+// =============================================
+// Particles
+// =============================================
+function createParticles() {
+  const c = document.getElementById('bgAnim');
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 80 + Math.random() * 200;
+    Object.assign(p.style, {
+      width:  size + 'px',
+      height: size + 'px',
+      left:   (Math.random() * 100) + '%',
+      animationDuration:  (8 + Math.random() * 12) + 's',
+      animationDelay:     (-Math.random() * 15) + 's',
+      opacity: '0.4'
+    });
+    c.appendChild(p);
+  }
+}
+
+// =============================================
+// Init
+// =============================================
+window.addEventListener('load', function() {
+  setLang(localStorage.getItem('ttm_lang') || 'th');
+  createParticles();
+  document.getElementById('username').focus();
+});
+</script>
+</body>
+</html>
